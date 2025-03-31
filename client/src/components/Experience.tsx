@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useCustomInView } from "@/hooks/useCustomInView";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
-import SectionHeading from "@/components/ui/section-heading";
-import { cn } from "@/lib/utils";
+import { useCustomInView } from "../hooks/useCustomInView";
+import { useSectionStore } from "../lib/stores/useSectionStore";
+import SectionHeading from "./ui/section-heading";
+import { cn, scrollToSection } from "../lib/utils";
 
 interface ExperienceItem {
   company: string;

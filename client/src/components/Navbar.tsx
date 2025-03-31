@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { cn } from "../lib/utils";
+import { cn, scrollToSection } from "../lib/utils";
 import { useThemeStore } from "../lib/stores/useThemeStore";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import { Moon, Sun, Menu, X } from "lucide-react";
@@ -34,7 +34,6 @@ const Navbar = () => {
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
-    console.log(`Attempting to navigate to section: ${id}`);
     
     // Close mobile menu if open
     setIsMenuOpen(false);
@@ -45,30 +44,8 @@ const Navbar = () => {
     // Mark this as a manual navigation
     useSectionStore.getState().setTimeOfLastClick(Date.now());
     
-    // Find the target element
-    const element = document.getElementById(id);
-    
-    if (!element) {
-      console.error(`Element with id "${id}" not found. Available IDs:`, 
-        Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-      return;
-    }
-    
-    // Get the navbar height for offset calculation
-    const navbar = document.querySelector('nav');
-    const navbarHeight = navbar ? navbar.offsetHeight : 80;
-    
-    // Calculate the element's position
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
-    
-    // Scroll to the element with the calculated offset
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-    
-    console.log(`Navigation complete to section: ${id}`);
+    // Use the reusable scroll function
+    scrollToSection(id);
   };
 
   return (

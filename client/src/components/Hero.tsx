@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useCustomInView } from "@/hooks/useCustomInView";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
+import { useCustomInView } from "../hooks/useCustomInView";
+import { useSectionStore } from "../lib/stores/useSectionStore";
+import { scrollToSection } from "../lib/utils";
 import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
@@ -68,29 +69,8 @@ const Hero = () => {
               setActiveSection("about");
               setTimeOfLastClick(Date.now());
               
-              // Find the target element
-              const element = document.getElementById("about");
-              
-              if (!element) {
-                console.error("About section not found");
-                return;
-              }
-              
-              // Get the navbar height for offset calculation
-              const navbar = document.querySelector('nav');
-              const navbarHeight = navbar ? navbar.offsetHeight : 80;
-              
-              // Calculate the element's position
-              const elementPosition = element.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
-              
-              // Scroll to the element with the calculated offset
-              window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-              });
-              
-              console.log("Navigation to about section complete");
+              // Use the utility function to scroll
+              scrollToSection("about");
             }}
             className="group flex items-center gap-2 border-2 border-secondary text-secondary px-7 py-4 rounded font-mono hover:bg-secondary/10 transition-colors duration-300"
           >

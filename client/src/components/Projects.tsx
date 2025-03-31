@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { useCustomInView } from "@/hooks/useCustomInView";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
-import SectionHeading from "@/components/ui/section-heading";
+import { useCustomInView } from "../hooks/useCustomInView";
+import { useSectionStore } from "../lib/stores/useSectionStore";
+import { scrollToSection } from "../lib/utils";
+import SectionHeading from "./ui/section-heading";
 import { ExternalLink, Github, ChevronRight } from "lucide-react";
 
 interface Project {

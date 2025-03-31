@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import { useCustomInView } from "../hooks/useCustomInView";
+import { scrollToSection } from "../lib/utils";
 import { FileText, Download } from "lucide-react";
 import SectionHeading from "./ui/section-heading";
 
@@ -64,7 +65,21 @@ const Resume = () => {
           
           <p className="text-muted-foreground text-center max-w-xl">
             Looking for a different format or more information?
-            Feel free to <a href="#contact" className="text-secondary hover:underline">contact me</a> for additional details or custom formats.
+            Feel free to <a 
+              href="#contact" 
+              className="text-secondary hover:underline"
+              onClick={(e) => {
+                e.preventDefault();
+                
+                // Update the store state
+                const { setActiveSection, setTimeOfLastClick } = useSectionStore.getState();
+                setActiveSection("contact");
+                setTimeOfLastClick(Date.now());
+                
+                // Use the utility function to scroll
+                scrollToSection("contact");
+              }}
+            >contact me</a> for additional details or custom formats.
           </p>
         </div>
       </div>
