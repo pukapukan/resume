@@ -8,6 +8,7 @@ const Contact = () => {
   const { setActiveSection } = useSectionStore();
   const { ref, inView } = useCustomInView({
     threshold: 0.3,
+    respectClickState: true
   });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

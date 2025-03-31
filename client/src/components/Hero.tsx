@@ -7,6 +7,7 @@ const Hero = () => {
   const { setActiveSection } = useSectionStore();
   const { ref, inView } = useCustomInView({
     threshold: 0.5,
+    respectClickState: true
   });
   
   const [typewriterComplete, setTypewriterComplete] = useState(false);
@@ -60,7 +61,19 @@ const Hero = () => {
             href="#about"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+              // Use the same technique as in Navbar component
+              const { setActiveSection, setTimeOfLastClick } = useSectionStore.getState();
+              setActiveSection("about");
+              setTimeOfLastClick(Date.now());
+              
+              const element = document.getElementById("about");
+              if (element) {
+                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({
+                  top: elementPosition - 100,
+                  behavior: "smooth"
+                });
+              }
             }}
             className="group flex items-center gap-2 border-2 border-secondary text-secondary px-7 py-4 rounded font-mono hover:bg-secondary/10 transition-colors duration-300"
           >

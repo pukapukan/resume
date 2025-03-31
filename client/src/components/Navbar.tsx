@@ -35,9 +35,20 @@ const Navbar = () => {
     setActiveSection(id);
     setIsMenuOpen(false);
     
+    // Make sure we're setting the time of the last click to avoid automatic section detection
+    useSectionStore.getState().setTimeOfLastClick(Date.now());
+    
+    // Find the element and scroll to it
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Use window.scrollTo for more consistent scrolling behavior
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - 100, // Offset to account for fixed navbar
+        behavior: "smooth"
+      });
+    } else {
+      console.warn(`Element with id "${id}" not found`);
     }
   };
 
@@ -110,7 +121,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[73px] bg-background z-40 flex flex-col items-center justify-center">
+        <div className="md:hidden fixed inset-0 top-[73px] bg-background/95 backdrop-blur-md border-t border-border z-40 flex flex-col items-center justify-center">
           <ul className="flex flex-col items-center gap-8">
             {navLinks.map((link, index) => (
               <li key={link.id}>

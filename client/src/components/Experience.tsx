@@ -77,6 +77,7 @@ const Experience = () => {
   const { setActiveSection } = useSectionStore();
   const { ref, inView } = useCustomInView({
     threshold: 0.3,
+    respectClickState: true
   });
   const [activeTab, setActiveTab] = useState(0);
 

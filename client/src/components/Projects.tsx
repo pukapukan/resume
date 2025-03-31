@@ -53,6 +53,7 @@ const Projects = () => {
   const { setActiveSection } = useSectionStore();
   const { ref, inView } = useCustomInView({
     threshold: 0.3,
+    respectClickState: true
   });
 
   useEffect(() => {
