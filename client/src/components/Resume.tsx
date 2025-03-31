@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
-import { useCustomInView } from "@/hooks/useCustomInView";
+import { useSectionStore } from "../lib/stores/useSectionStore";
+import { useCustomInView } from "../hooks/useCustomInView";
 import { FileText, Download } from "lucide-react";
 import SectionHeading from "./ui/section-heading";
 
@@ -42,7 +42,7 @@ const Resume = () => {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="/assets/Jason_Park_Resume.pdf"
+                href="/assets/Jason Park (2025).pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-medium px-4 py-2 rounded hover:bg-secondary/90 transition-colors w-full"
@@ -52,8 +52,8 @@ const Resume = () => {
               </a>
               
               <a
-                href="/assets/Jason_Park_Resume.pdf"
-                download="Jason_Park_Resume.pdf"
+                href="/assets/Jason Park (2025).pdf"
+                download="Jason Park (2025).pdf"
                 className="flex items-center justify-center gap-2 border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary/10 transition-colors w-full font-medium"
               >
                 <Download size={18} />
