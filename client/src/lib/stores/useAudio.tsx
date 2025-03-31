@@ -5,6 +5,7 @@ interface AudioState {
   hitSound: HTMLAudioElement | null;
   successSound: HTMLAudioElement | null;
   isMuted: boolean;
+  bgMusicPlaying: boolean;
   
   // Setter functions
   setBackgroundMusic: (music: HTMLAudioElement) => void;
@@ -15,6 +16,9 @@ interface AudioState {
   toggleMute: () => void;
   playHit: () => void;
   playSuccess: () => void;
+  playBackgroundMusic: () => void;
+  pauseBackgroundMusic: () => void;
+  toggleBackgroundMusic: () => void;
 }
 
 export const useAudio = create<AudioState>((set, get) => ({
@@ -22,14 +26,20 @@ export const useAudio = create<AudioState>((set, get) => ({
   hitSound: null,
   successSound: null,
   isMuted: true, // Start muted by default
+  bgMusicPlaying: false,
   
   setBackgroundMusic: (music) => set({ backgroundMusic: music }),
   setHitSound: (sound) => set({ hitSound: sound }),
   setSuccessSound: (sound) => set({ successSound: sound }),
   
   toggleMute: () => {
-    const { isMuted } = get();
+    const { isMuted, backgroundMusic } = get();
     const newMutedState = !isMuted;
+    
+    // Update the muted state for both store and actual audio elements
+    if (backgroundMusic) {
+      backgroundMusic.muted = newMutedState;
+    }
     
     // Just update the muted state
     set({ isMuted: newMutedState });
@@ -47,12 +57,18 @@ export const useAudio = create<AudioState>((set, get) => ({
         return;
       }
       
-      // Clone the sound to allow overlapping playback
-      const soundClone = hitSound.cloneNode() as HTMLAudioElement;
-      soundClone.volume = 0.3;
-      soundClone.play().catch(error => {
-        console.log("Hit sound play prevented:", error);
-      });
+      try {
+        // Clone the sound to allow overlapping playback
+        const soundClone = hitSound.cloneNode() as HTMLAudioElement;
+        soundClone.volume = 0.3;
+        soundClone.play().catch(error => {
+          console.log("Hit sound play prevented:", error);
+        });
+      } catch (err) {
+        // Fallback if cloning fails
+        hitSound.currentTime = 0;
+        hitSound.play().catch(err => console.warn('Error playing hit sound:', err));
+      }
     }
   },
   
@@ -65,10 +81,61 @@ export const useAudio = create<AudioState>((set, get) => ({
         return;
       }
       
-      successSound.currentTime = 0;
-      successSound.play().catch(error => {
-        console.log("Success sound play prevented:", error);
-      });
+      try {
+        successSound.currentTime = 0;
+        successSound.volume = 0.7;
+        successSound.play().catch(error => {
+          console.log("Success sound play prevented:", error);
+        });
+      } catch (err) {
+        console.warn('Could not play success sound:', err);
+      }
+    }
+  },
+  
+  playBackgroundMusic: () => {
+    const { backgroundMusic, isMuted, bgMusicPlaying } = get();
+    
+    if (backgroundMusic && !bgMusicPlaying) {
+      backgroundMusic.muted = isMuted;
+      backgroundMusic.volume = 0.3; // Low volume for background music
+      backgroundMusic.loop = true;
+      
+      // Use a promise to handle autoplay restrictions
+      const playPromise = backgroundMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            set({ bgMusicPlaying: true });
+            console.log('Background music started');
+          })
+          .catch(err => {
+            // Autoplay was prevented, we'll need user interaction
+            console.warn('Background music autoplay prevented:', err);
+          });
+      }
+    }
+  },
+  
+  pauseBackgroundMusic: () => {
+    const { backgroundMusic } = get();
+    
+    if (backgroundMusic && !backgroundMusic.paused) {
+      backgroundMusic.pause();
+      set({ bgMusicPlaying: false });
+      console.log('Background music paused');
+    }
+  },
+  
+  toggleBackgroundMusic: () => {
+    const { bgMusicPlaying } = get();
+    const { playBackgroundMusic, pauseBackgroundMusic } = get();
+    
+    if (bgMusicPlaying) {
+      pauseBackgroundMusic();
+    } else {
+      playBackgroundMusic();
     }
   }
 }));

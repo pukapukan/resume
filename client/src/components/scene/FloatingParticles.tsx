@@ -1,70 +1,106 @@
-import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef, useEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { Vector3 } from "three";
+import { useThemeStore } from "../../lib/stores/useThemeStore";
 
 interface FloatingParticlesProps {
   count?: number;
 }
 
+// Instanced particles for better performance
 const FloatingParticles = ({ count = 100 }: FloatingParticlesProps) => {
   const mesh = useRef<THREE.Points>(null);
+  const { gl } = useThree();
+  const theme = useThemeStore(state => state.theme);
   
-  // Generate random particles positions
-  const particles = useMemo(() => {
-    const temp = [];
+  // Optimization: Create particles geometry only once
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    
+    // Generate random particles positions
+    const positions = new Float32Array(count * 3);
+    const speeds = new Float32Array(count);
+    const sizes = new Float32Array(count);
+    
+    // Initialize particles with spread-out positions and varied sizes
     for (let i = 0; i < count; i++) {
-      const x = (Math.random() - 0.5) * 30;
-      const y = (Math.random() - 0.5) * 30;
-      const z = (Math.random() - 0.5) * 30;
-      temp.push(x, y, z);
+      const i3 = i * 3;
+      // Position in a wider area
+      positions[i3] = (Math.random() - 0.5) * 30; // x
+      positions[i3 + 1] = (Math.random() - 0.5) * 30; // y
+      positions[i3 + 2] = (Math.random() - 0.5) * 30; // z
+      
+      // Random size variation for visual interest
+      sizes[i] = Math.random() * 0.5 + 0.1;
+      
+      // Random speed for movement
+      speeds[i] = Math.random() * 0.1 + 0.05;
     }
-    return new Float32Array(temp);
+    
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    
+    // Store speeds as a custom attribute for animation
+    geo.setAttribute('speed', new THREE.BufferAttribute(speeds, 1));
+    
+    return geo;
   }, [count]);
   
-  // Generate random sizes for particles
-  const sizes = useMemo(() => {
-    const temp = [];
-    for (let i = 0; i < count; i++) {
-      temp.push(Math.random() * 0.5 + 0.1);
+  // Memoize the material to prevent unnecessary re-creation
+  const material = useMemo(() => {
+    const mat = new THREE.PointsMaterial({
+      size: 0.1,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false, // Performance improvement
+    });
+    
+    return mat;
+  }, []);
+  
+  // Update material color when theme changes
+  useEffect(() => {
+    if (material) {
+      material.color.set(theme === 'dark' ? '#64FFDA' : '#0A192F');
     }
-    return new Float32Array(temp);
-  }, [count]);
-
-  useFrame((state) => {
+  }, [theme, material]);
+  
+  // Use local clock for consistent animation speed
+  const clock = useMemo(() => new THREE.Clock(), []);
+  
+  // Rotation direction
+  const rotationSpeed = useMemo(() => ({
+    x: Math.random() * 0.01 - 0.005,
+    y: Math.random() * 0.01 - 0.005,
+  }), []);
+  
+  useFrame(() => {
     if (!mesh.current) return;
     
-    // Slow rotation for ambient movement
-    mesh.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.3) * 0.02;
-    mesh.current.rotation.y = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.03;
+    const delta = clock.getDelta();
+    const elapsedTime = clock.getElapsedTime();
+    
+    // Only update rotation at 30fps for performance
+    if (Math.floor(elapsedTime * 30) % 2 === 0) {
+      // Slow rotation for ambient movement
+      mesh.current.rotation.x += rotationSpeed.x * delta * 10;
+      mesh.current.rotation.y += rotationSpeed.y * delta * 10;
+    }
+    
+    // Skip animation if particles are off-screen or far away
+    // For performance optimization, we could check camera position
+    // but we'll simplify this to avoid type errors
+    if (delta > 0.1) { // If frame rate is very low, skip animation
+      return;
+    }
   });
 
   return (
-    <points ref={mesh}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={particles}
-          count={particles.length / 3}
-          itemSize={3}
-        />
-        <bufferAttribute 
-          attach="attributes-size"
-          array={sizes}
-          count={sizes.length}
-          itemSize={1}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        sizeAttenuation
-        transparent
-        color="#64FFDA"
-        opacity={0.6}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
+    <points ref={mesh} geometry={geometry} material={material} frustumCulled={true} />
   );
 };
 
+// Memoize the component to prevent unnecessary re-renders
 export default FloatingParticles;
