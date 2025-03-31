@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 42% 11%;
+    --foreground: 214 95% 95%;
+    
+    --primary: 0 0% 18%;
+    --primary-foreground: 214 95% 95%;
+    
+    --secondary: 174 100% 70%;
+    --secondary-foreground: 222 42% 11%;
+    
+    --muted: 217 19% 62%;
+    --muted-foreground: 217 19% 62%;
+    
+    --accent: 36 100% 65%;
+    --accent-foreground: 222 42% 11%;
+    
+    --card: 222 47% 16%;
+    --card-foreground: 214 95% 95%;
+    
+    --popover: 222 47% 16%;
+    --popover-foreground: 214 95% 95%;
+    
+    --border: 224 32% 25%;
+    --input: 224 32% 25%;
+    --ring: 174 100% 70%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --chart-1: 174 100% 70%;
+    --chart-2: 36 100% 65%;
+    --chart-3: 214 95% 95%;
+    --chart-4: 0 84% 60%;
+    --chart-5: 262 83% 58%;
+    
+    --radius: 0.5rem;
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 6px;
+    border: 3px solid hsl(var(--background));
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted));
+  }
+}
+
+/* For fonts */
+@font-face {
+  font-family: 'Calibre';
+  src: url('https://cdn.jsdelivr.net/gh/connorbrett/medium-portfolio@master/fonts/Calibre/Calibre-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Calibre';
+  src: url('https://cdn.jsdelivr.net/gh/connorbrett/medium-portfolio@master/fonts/Calibre/Calibre-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Calibre';
+  src: url('https://cdn.jsdelivr.net/gh/connorbrett/medium-portfolio@master/fonts/Calibre/Calibre-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('https://cdn.jsdelivr.net/gh/connorbrett/medium-portfolio@master/fonts/SFMono/SFMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('https://cdn.jsdelivr.net/gh/connorbrett/medium-portfolio@master/fonts/SFMono/SFMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  body {
+    font-family: 'Calibre', sans-serif;
+  }
+  
+  .font-mono {
+    font-family: 'SF Mono', monospace;
+  }
+}
+
+/* Typewriter effect */
+.typewriter-container {
+  display: inline-block;
+}
+
+.typewriter-text {
+  overflow: hidden;
+  border-right: 0.15em solid hsl(var(--secondary));
+  white-space: nowrap;
+  margin: 0;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: hsl(var(--secondary)) }
+}
+
+/* Utility classes */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
