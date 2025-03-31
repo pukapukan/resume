@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
+import { useSectionStore } from "../lib/stores/useSectionStore";
 
 export const useActiveSection = (sectionId: string, threshold = 0.5) => {
   const { setActiveSection } = useSectionStore();

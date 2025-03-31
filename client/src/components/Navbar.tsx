@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { useThemeStore } from "@/lib/stores/useThemeStore";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
+import { cn } from "../lib/utils";
+import { useThemeStore } from "../lib/stores/useThemeStore";
+import { useSectionStore } from "../lib/stores/useSectionStore";
 import { Moon, Sun, Menu, X } from "lucide-react";
 
 interface NavLink {
@@ -31,12 +31,16 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (id: string) => {
+  const handleNavClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault(); // Prevent default hash navigation
+    
     setActiveSection(id);
     setIsMenuOpen(false);
     
     // Make sure we're setting the time of the last click to avoid automatic section detection
     useSectionStore.getState().setTimeOfLastClick(Date.now());
+    
+    console.log(`Navigating to section: ${id}`);
     
     // Find the element and scroll to it
     const element = document.getElementById(id);
@@ -65,7 +69,7 @@ const Navbar = () => {
         <a 
           href="#hero" 
           className="text-secondary font-mono text-xl font-bold"
-          onClick={() => handleNavClick("hero")}
+          onClick={(e) => handleNavClick(e, "hero")}
         >
           Jason Park
         </a>
@@ -76,7 +80,7 @@ const Navbar = () => {
             {navLinks.map((link, index) => (
               <li key={link.id}>
                 <button
-                  onClick={() => handleNavClick(link.id)}
+                  onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
                     "font-mono transition-colors duration-300 px-1",
                     activeSection === link.id
@@ -126,7 +130,7 @@ const Navbar = () => {
             {navLinks.map((link, index) => (
               <li key={link.id}>
                 <button
-                  onClick={() => handleNavClick(link.id)}
+                  onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
                     "font-mono text-lg transition-colors duration-300",
                     activeSection === link.id

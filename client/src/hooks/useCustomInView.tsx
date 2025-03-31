@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
+import { useSectionStore } from "../lib/stores/useSectionStore";
 
 interface InViewOptions {
   threshold?: number;
@@ -8,7 +8,8 @@ interface InViewOptions {
   respectClickState?: boolean;
 }
 
-export const useCustomInView = (options: InViewOptions = {}) => {
+// Named function to help React Fast Refresh
+function useCustomInViewHook(options: InViewOptions = {}) {
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLElement | null>(null);
   const { timeOfLastClick } = useSectionStore();
@@ -44,4 +45,7 @@ export const useCustomInView = (options: InViewOptions = {}) => {
   }, [options.threshold, options.rootMargin, timeOfLastClick, options.respectClickState]);
   
   return { ref, inView };
-};
+}
+
+// Export the hook - keeps consistent naming for imports
+export const useCustomInView = useCustomInViewHook;

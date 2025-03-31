@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
-import { InView } from "react-intersection-observer";
-import { useSectionStore } from "@/lib/stores/useSectionStore";
+import { useEffect } from "react";
+import { useCustomInView } from "./useCustomInView";
+import { useSectionStore } from "../lib/stores/useSectionStore";
 
 export function useSectionInView(sectionName: string, threshold = 0.75) {
-  const { setActiveSection, timeOfLastClick } = useSectionStore();
-  const [ref, inView] = InView({
+  const { setActiveSection } = useSectionStore();
+  // Use our custom hook with respectClickState=true to respect navigation clicks
+  const { ref, inView } = useCustomInView({
     threshold,
+    respectClickState: true
   });
 
   useEffect(() => {
-    if (inView && Date.now() - timeOfLastClick > 1000) {
+    if (inView) {
       setActiveSection(sectionName);
     }
-  }, [inView, setActiveSection, timeOfLastClick, sectionName]);
+  }, [inView, setActiveSection, sectionName]);
 
   return {
     ref,

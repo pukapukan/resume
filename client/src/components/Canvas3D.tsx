@@ -15,31 +15,37 @@ const Canvas3D = () => {
 
   // Update camera and objects based on scroll
   useFrame(() => {
-    if (!cameraRef.current || !groupRef.current || !scroll) return;
+    // Safety checks
+    if (!cameraRef.current || !groupRef.current) return;
+    if (!scroll || typeof scroll.offset !== 'number') return;
     
     // Get current scroll offset (0 to 1)
-    const scrollOffset = scroll.offset || 0;
+    const scrollOffset = Math.max(0, Math.min(1, scroll.offset)); // Clamp between 0 and 1
     
-    // Move camera based on scroll
-    cameraRef.current.position.y = THREE.MathUtils.lerp(
-      5, // Starting y position
-      -15, // Ending y position
-      scrollOffset
-    );
-    
-    // Tilt camera based on scroll for dynamic feel
-    cameraRef.current.rotation.x = THREE.MathUtils.lerp(
-      0.1, // Starting rotation
-      0.6, // Ending rotation
-      scrollOffset
-    );
-    
-    // Rotate group slightly for parallax effect
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(
-      0,
-      Math.PI * 0.1,
-      scrollOffset
-    );
+    try {
+      // Move camera based on scroll
+      cameraRef.current.position.y = THREE.MathUtils.lerp(
+        5, // Starting y position
+        -15, // Ending y position
+        scrollOffset
+      );
+      
+      // Tilt camera based on scroll for dynamic feel
+      cameraRef.current.rotation.x = THREE.MathUtils.lerp(
+        0.1, // Starting rotation
+        0.6, // Ending rotation
+        scrollOffset
+      );
+      
+      // Rotate group slightly for parallax effect
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(
+        0,
+        Math.PI * 0.1,
+        scrollOffset
+      );
+    } catch (error) {
+      console.error("Error in Canvas3D animation frame:", error);
+    }
   });
 
   return (

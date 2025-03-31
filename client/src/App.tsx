@@ -24,10 +24,24 @@ function App() {
       setIsLoading(false);
     }, 2000);
     
-    // Setup theme
+    return () => clearTimeout(timer);
+  }, []);
+  
+  useEffect(() => {
+    // Handle theme changes
+    document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(theme);
     
-    return () => clearTimeout(timer);
+    // Also update body and html styles for complete theme consistency
+    if (theme === 'dark') {
+      document.documentElement.style.colorScheme = 'dark';
+      document.body.classList.add('dark');
+    } else {
+      document.documentElement.style.colorScheme = 'light';
+      document.body.classList.remove('dark');
+    }
+    
+    console.log('Theme changed to:', theme);
   }, [theme]);
 
   return (
