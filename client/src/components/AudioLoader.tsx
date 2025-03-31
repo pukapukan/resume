@@ -15,7 +15,7 @@ const AudioLoader = () => {
       setBackgroundMusic(bgMusic);
       
       // Hit sound (for interactions)
-      const hitSfx = new Audio('/sounds/click.mp3');
+      const hitSfx = new Audio('/sounds/hit.mp3');
       hitSfx.preload = 'auto';
       setHitSound(hitSfx);
       

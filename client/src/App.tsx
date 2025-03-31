@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Loader } from "./components/Loader";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -15,12 +16,12 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const { theme } = useThemeStore();
   
-  // Preload critical assets
+  // Preload critical assets with a more realistic loading time
   useEffect(() => {
-    // Simple loading simulation
+    // Simulate asset loading - longer time to show the loader animation
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 4000); // 4 seconds to give a chance to see the loader animation
     
     return () => clearTimeout(timer);
   }, []);
@@ -43,13 +44,31 @@ function App() {
     console.log('Theme changed to:', theme);
   }, [theme]);
 
+  // Content fade-in animation
+  const contentVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.8,
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <main className="relative z-0 bg-background">
         {isLoading ? (
           <Loader />
         ) : (
-          <div className="relative">
+          <motion.div 
+            className="relative"
+            initial="hidden"
+            animate="visible"
+            variants={contentVariants}
+          >
             <Navbar />
             <div>
               <Hero />
@@ -59,7 +78,7 @@ function App() {
               <Contact />
               <Footer />
             </div>
-          </div>
+          </motion.div>
         )}
       </main>
     </QueryClientProvider>
