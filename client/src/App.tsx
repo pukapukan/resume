@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
+import Resume from "./components/Resume";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -16,12 +17,12 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const { theme } = useThemeStore();
   
-  // Preload critical assets with a more realistic loading time
+  // Preload critical assets with a shorter loading time
   useEffect(() => {
-    // Simulate asset loading - longer time to show the loader animation
+    // Simulate asset loading - brief loading time for better user experience
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 4000); // 4 seconds to give a chance to see the loader animation
+    }, 1500); // 1.5 seconds is enough to show animation without frustrating users
     
     return () => clearTimeout(timer);
   }, []);
@@ -75,6 +76,7 @@ function App() {
               <About />
               <Experience />
               <Projects />
+              <Resume />
               <Contact />
               <Footer />
             </div>

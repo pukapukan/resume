@@ -61,28 +61,36 @@ const Hero = () => {
             href="#about"
             onClick={(e) => {
               e.preventDefault();
-              // Use the same technique as in Navbar component
+              console.log("Clicking explore my work button");
+              
+              // Update the store state
               const { setActiveSection, setTimeOfLastClick } = useSectionStore.getState();
               setActiveSection("about");
               setTimeOfLastClick(Date.now());
               
-              // Small delay to ensure reliable scrolling
-              setTimeout(() => {
-                const element = document.getElementById("about");
-                if (element) {
-                  // Use scrollIntoView for more reliable scrolling
-                  element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                  });
-                  
-                  // Additional offset adjustment
-                  window.scrollBy({
-                    top: -100, // Offset for navbar
-                    behavior: "smooth"
-                  });
-                }
-              }, 10);
+              // Find the target element
+              const element = document.getElementById("about");
+              
+              if (!element) {
+                console.error("About section not found");
+                return;
+              }
+              
+              // Get the navbar height for offset calculation
+              const navbar = document.querySelector('nav');
+              const navbarHeight = navbar ? navbar.offsetHeight : 80;
+              
+              // Calculate the element's position
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
+              
+              // Scroll to the element with the calculated offset
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+              
+              console.log("Navigation to about section complete");
             }}
             className="group flex items-center gap-2 border-2 border-secondary text-secondary px-7 py-4 rounded font-mono hover:bg-secondary/10 transition-colors duration-300"
           >

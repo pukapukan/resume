@@ -13,6 +13,7 @@ const navLinks: NavLink[] = [
   { id: "about", title: "About" },
   { id: "experience", title: "Experience" },
   { id: "projects", title: "Projects" },
+  { id: "resume", title: "Resume" },
   { id: "contact", title: "Contact" }
 ];
 
@@ -33,36 +34,41 @@ const Navbar = () => {
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
+    console.log(`Attempting to navigate to section: ${id}`);
+    
+    // Close mobile menu if open
+    setIsMenuOpen(false);
     
     // First, set the active section in the store
     setActiveSection(id);
-    setIsMenuOpen(false);
     
-    // Make sure we're setting the time of the last click to avoid automatic section detection
+    // Mark this as a manual navigation
     useSectionStore.getState().setTimeOfLastClick(Date.now());
     
-    console.log(`Navigating to section: ${id}`);
+    // Find the target element
+    const element = document.getElementById(id);
     
-    // Wait a short tick to allow any DOM updates to complete
-    setTimeout(() => {
-      // Find the element and scroll to it
-      const element = document.getElementById(id);
-      if (element) {
-        // Use scrollIntoView for more consistent scrolling behavior across browsers
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-        
-        // Add a small offset for the navbar using a scroll adjustment
-        window.scrollBy({
-          top: -100, // Offset for the fixed navbar
-          behavior: "smooth"
-        });
-      } else {
-        console.warn(`Element with id "${id}" not found`);
-      }
-    }, 10); // Small delay to ensure DOM is updated
+    if (!element) {
+      console.error(`Element with id "${id}" not found. Available IDs:`, 
+        Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+      return;
+    }
+    
+    // Get the navbar height for offset calculation
+    const navbar = document.querySelector('nav');
+    const navbarHeight = navbar ? navbar.offsetHeight : 80;
+    
+    // Calculate the element's position
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
+    
+    // Scroll to the element with the calculated offset
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+    
+    console.log(`Navigation complete to section: ${id}`);
   };
 
   return (
