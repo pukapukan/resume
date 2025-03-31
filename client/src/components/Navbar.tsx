@@ -34,6 +34,7 @@ const Navbar = () => {
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
     
+    // First, set the active section in the store
     setActiveSection(id);
     setIsMenuOpen(false);
     
@@ -42,18 +43,26 @@ const Navbar = () => {
     
     console.log(`Navigating to section: ${id}`);
     
-    // Find the element and scroll to it
-    const element = document.getElementById(id);
-    if (element) {
-      // Use window.scrollTo for more consistent scrolling behavior
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: elementPosition - 100, // Offset to account for fixed navbar
-        behavior: "smooth"
-      });
-    } else {
-      console.warn(`Element with id "${id}" not found`);
-    }
+    // Wait a short tick to allow any DOM updates to complete
+    setTimeout(() => {
+      // Find the element and scroll to it
+      const element = document.getElementById(id);
+      if (element) {
+        // Use scrollIntoView for more consistent scrolling behavior across browsers
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+        
+        // Add a small offset for the navbar using a scroll adjustment
+        window.scrollBy({
+          top: -100, // Offset for the fixed navbar
+          behavior: "smooth"
+        });
+      } else {
+        console.warn(`Element with id "${id}" not found`);
+      }
+    }, 10); // Small delay to ensure DOM is updated
   };
 
   return (

@@ -66,14 +66,23 @@ const Hero = () => {
               setActiveSection("about");
               setTimeOfLastClick(Date.now());
               
-              const element = document.getElementById("about");
-              if (element) {
-                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({
-                  top: elementPosition - 100,
-                  behavior: "smooth"
-                });
-              }
+              // Small delay to ensure reliable scrolling
+              setTimeout(() => {
+                const element = document.getElementById("about");
+                if (element) {
+                  // Use scrollIntoView for more reliable scrolling
+                  element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                  });
+                  
+                  // Additional offset adjustment
+                  window.scrollBy({
+                    top: -100, // Offset for navbar
+                    behavior: "smooth"
+                  });
+                }
+              }, 10);
             }}
             className="group flex items-center gap-2 border-2 border-secondary text-secondary px-7 py-4 rounded font-mono hover:bg-secondary/10 transition-colors duration-300"
           >
