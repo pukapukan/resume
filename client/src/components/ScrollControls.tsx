@@ -15,20 +15,26 @@ const ScrollControls: React.FC<ScrollControlsProps> = ({ children }) => {
   
   // Sync scroll position with active section
   useEffect(() => {
-    if (activeSection && scrollRef.current) {
+    if (activeSection && scrollRef.current && scroll.el) {
       const section = document.getElementById(activeSection);
       if (section) {
         const sectionTop = section.offsetTop;
         const windowHeight = window.innerHeight;
         const scrollPosition = sectionTop / (document.body.scrollHeight - windowHeight);
         
-        scroll.el.scrollTop = scrollPosition * scroll.el.scrollHeight;
+        // Make sure scroll.el exists before accessing its properties
+        if (scroll.el) {
+          scroll.el.scrollTop = scrollPosition * scroll.el.scrollHeight;
+        }
       }
     }
-  }, [activeSection, scroll.el]);
+  }, [activeSection, scroll]);
   
   // Update 3D elements based on scroll
   useFrame(() => {
+    // Only proceed if scroll is properly initialized
+    if (!scroll) return;
+    
     // Get current scroll progress (0 to 1)
     const scrollProgress = scroll.offset;
     

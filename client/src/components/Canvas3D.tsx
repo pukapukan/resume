@@ -15,10 +15,10 @@ const Canvas3D = () => {
 
   // Update camera and objects based on scroll
   useFrame(() => {
-    if (!cameraRef.current || !groupRef.current) return;
+    if (!cameraRef.current || !groupRef.current || !scroll) return;
     
     // Get current scroll offset (0 to 1)
-    const scrollOffset = scroll.offset;
+    const scrollOffset = scroll.offset || 0;
     
     // Move camera based on scroll
     cameraRef.current.position.y = THREE.MathUtils.lerp(
