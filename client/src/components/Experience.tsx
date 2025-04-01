@@ -3,7 +3,7 @@ import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
 import { cn, scrollToSection } from "../lib/utils";
-import Globe from "./Globe";
+import MapGlobe from "./MapGlobe";
 
 interface ExperienceItem {
   company: string;
@@ -96,8 +96,8 @@ const Experience = () => {
       ref={ref}
       className="relative py-24 px-6 min-h-screen flex items-center scroll-mt-24 overflow-hidden"
     >
-      {/* Globe Background Component */}
-      <Globe />
+      {/* MapGlobe Background Component */}
+      <MapGlobe />
       
       <div className="max-w-7xl mx-auto w-full relative z-10">
         <SectionHeading title="Where I've Worked" number="02" />

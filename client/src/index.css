@@ -100,3 +100,28 @@ canvas {
   from, to { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* MapBox customizations */
+.mapboxgl-popup {
+  z-index: 999;
+}
+
+.mapboxgl-popup-content {
+  background-color: rgba(10, 25, 47, 0.85) !important;
+  border: 1px solid #64FFDA;
+  border-radius: 4px !important;
+  color: #E6F1FF;
+  padding: 8px;
+  box-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+}
+
+.map-popup .mapboxgl-popup-tip {
+  border-top-color: #64FFDA !important;
+  border-bottom-color: #64FFDA !important;
+}
+
+/* Hide attribution control but keep it accessible */
+.mapboxgl-ctrl-attrib {
+  opacity: 0.5;
+  font-size: 10px;
+}
