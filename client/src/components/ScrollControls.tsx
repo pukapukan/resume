@@ -1,85 +1,58 @@
-import { useEffect, useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { useScroll, ScrollControls as DreiScrollControls } from "@react-three/drei";
+import { useEffect, useRef, ReactNode } from "react";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 
 interface ScrollControlsProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const ScrollControls: React.FC<ScrollControlsProps> = ({ children }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+/**
+ * ScrollControls - A component that enables better scroll handling and fixes scrolling issues
+ * This version doesn't use Three.js as we've removed the game/3D components
+ */
+export const ScrollControls = ({ children }: ScrollControlsProps) => {
   const { activeSection } = useSectionStore();
-  const { size } = useThree();
-  const scroll = useScroll();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
-  // Sync scroll position with active section
+  // Handle scroll behavior overrides for better cross-browser compatibility
   useEffect(() => {
-    if (!activeSection) return;
-    if (!scroll || !scroll.el) return;
+    if (!scrollContainerRef.current) return;
     
-    try {
-      const section = document.getElementById(activeSection);
-      if (!section) {
-        console.warn(`Section with ID ${activeSection} not found in DOM`);
-        return;
-      }
-      
-      const sectionTop = section.offsetTop;
-      const windowHeight = window.innerHeight;
-      const docHeight = document.body.scrollHeight;
-      
-      // Avoid division by zero
-      if (docHeight <= windowHeight) {
-        console.warn('Document height is too small for scroll calculation');
-        return;
-      }
-      
-      const scrollPosition = sectionTop / (docHeight - windowHeight);
-      
-      // Safely set scroll position
-      if (scroll.el && scroll.el.scrollHeight > 0) {
-        // Clamp value between 0 and scroll.el.scrollHeight
-        const targetPosition = Math.max(0, Math.min(
-          scrollPosition * scroll.el.scrollHeight,
-          scroll.el.scrollHeight
-        ));
-        
-        scroll.el.scrollTop = targetPosition;
-      }
-    } catch (error) {
-      console.error('Error in ScrollControls sync effect:', error);
-    }
-  }, [activeSection, scroll]);
-  
-  // Update 3D elements based on scroll
-  useFrame(() => {
-    // Only proceed if scroll is properly initialized
-    if (!scroll || typeof scroll.offset !== 'number') return;
+    // Enable scrolling by adding overflow settings
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+    document.body.style.height = 'auto';
     
-    try {
-      // Get current scroll progress (0 to 1) with safety clamping
-      const scrollProgress = Math.max(0, Math.min(1, scroll.offset));
-      
-      // This frame handler is mostly to monitor scroll events
-      // Actual 3D transformations are handled in the Canvas3D component
-      
-      // Add debugging if needed
-      // console.log('Scroll progress:', scrollProgress);
-    } catch (error) {
-      console.error('Error in ScrollControls frame update:', error);
-    }
-  });
+    // Handle special scrolling cases like hash navigation
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          console.log(`Hash navigation to section: ${id}`);
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      }
+    };
+    
+    // Add event listener for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
   
   return (
-    <DreiScrollControls
-      pages={5} // Approximate number of pages (update based on your sections)
-      damping={0.2}
-      distance={1}
+    <div 
+      ref={scrollContainerRef} 
+      className="w-full h-full"
+      style={{ position: 'relative', overflowY: 'auto' }}
     >
       {children}
-    </DreiScrollControls>
+    </div>
   );
 };
-
-export default ScrollControls;

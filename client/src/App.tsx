@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { useThemeStore } from "./lib/stores/useThemeStore";
+import { ScrollControls } from "./components/ScrollControls";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +45,26 @@ function App() {
     
     console.log('Theme changed to:', theme);
   }, [theme]);
+  
+  // Handle initial hash navigation on page load
+  useEffect(() => {
+    if (!isLoading) {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = hash.replace('#', '');
+        console.log(`Initial navigation to hash: ${hash}`);
+        
+        // Small delay to ensure the DOM is fully loaded
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            console.log(`Scrolling to ${id} section via initial hash navigation`);
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
+      }
+    }
+  }, [isLoading]);
 
   // Content fade-in animation
   const contentVariants = {
@@ -64,23 +85,25 @@ function App() {
         {isLoading ? (
           <Loader />
         ) : (
-          <motion.div 
-            className="relative"
-            initial="hidden"
-            animate="visible"
-            variants={contentVariants}
-          >
-            <Navbar />
-            <div>
-              <Hero />
-              <About />
-              <Experience />
-              <Projects />
-              <Resume />
-              <Contact />
-              <Footer />
-            </div>
-          </motion.div>
+          <ScrollControls>
+            <motion.div 
+              className="relative"
+              initial="hidden"
+              animate="visible"
+              variants={contentVariants}
+            >
+              <Navbar />
+              <div>
+                <Hero />
+                <About />
+                <Experience />
+                <Projects />
+                <Resume />
+                <Contact />
+                <Footer />
+              </div>
+            </motion.div>
+          </ScrollControls>
         )}
       </main>
     </QueryClientProvider>

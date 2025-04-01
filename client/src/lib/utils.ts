@@ -11,56 +11,56 @@ const setLocalStorage = (key: string, value: any): void =>
   window.localStorage.setItem(key, JSON.stringify(value));
 
 /**
- * Utility function to scroll to a section smoothly with proper offset calculation
+ * Utility function to scroll to a section using the browser's native scrollIntoView
+ * This is much more reliable than custom scroll calculations
  */
 export function scrollToSection(sectionId: string): void {
   console.log(`Attempting to scroll to section: ${sectionId}`);
   
-  // Use setTimeout to ensure DOM is fully rendered, especially when using libraries like framer-motion
-  setTimeout(() => {
-    // Find the target element
-    const element = document.getElementById(sectionId);
+  // Find the target element
+  const element = document.getElementById(sectionId);
+  
+  if (!element) {
+    console.error(`Element with id "${sectionId}" not found. Available IDs:`, 
+      Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+    return;
+  }
+  
+  try {
+    // Directly use the browser's scrollIntoView functionality
+    element.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
     
-    if (!element) {
-      console.error(`Element with id "${sectionId}" not found. Available IDs:`, 
-        Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-      return;
-    }
+    // If smooth scrolling fails, provide a fallback
+    setTimeout(() => {
+      if (!isElementInViewport(element)) {
+        console.log("Using fallback scroll method");
+        // Force scroll to element
+        element.scrollIntoView(true);
+      }
+    }, 300);
     
-    // Get the navbar height for offset calculation
-    const navbar = document.querySelector('nav');
-    const navbarHeight = navbar ? navbar.offsetHeight : 80;
-    
-    // Calculate the element's position with getBoundingClientRect()
-    const elementRect = element.getBoundingClientRect();
-    const scrollY = window.scrollY || window.pageYOffset;
-    const absoluteElementTop = elementRect.top + scrollY;
-    const offsetPosition = absoluteElementTop - navbarHeight - 20;
-    
-    console.log(`Scrolling to section ${sectionId} at position: ${offsetPosition}`);
-    
-    try {
-      // Attempt to scroll with smooth behavior
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      
-      // Fallback to ensure we get to the right position even if smooth scrolling fails
-      setTimeout(() => {
-        if (Math.abs(window.scrollY - offsetPosition) > 50) {
-          console.log("Smooth scroll may have failed, using fallback");
-          window.scrollTo(0, offsetPosition);
-        }
-      }, 500);
-      
-      console.log(`Navigation complete to section: ${sectionId}`);
-    } catch (error) {
-      console.error("Error during scroll:", error);
-      // Hard fallback
-      window.scrollTo(0, offsetPosition);
-    }
-  }, 50); // Small delay to ensure rendering is complete
+    console.log(`Navigation complete to section: ${sectionId}`);
+  } catch (error) {
+    console.error("Error during scroll:", error);
+    // Hard fallback
+    element.scrollIntoView(true);
+  }
+}
+
+/**
+ * Helper function to check if an element is in the viewport
+ */
+function isElementInViewport(el: Element) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 }
 
 export { getLocalStorage, setLocalStorage };

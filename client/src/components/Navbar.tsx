@@ -45,10 +45,39 @@ const Navbar = () => {
     // Mark this as a manual navigation
     useSectionStore.getState().setTimeOfLastClick(Date.now());
     
-    // Use the reusable scroll function with a small delay to ensure any rendering is complete
-    setTimeout(() => {
-      scrollToSection(id);
-    }, 10);
+    // Find the section element
+    const sectionElement = document.getElementById(id);
+    if (sectionElement) {
+      console.log(`Found section element: ${id}`);
+      
+      try {
+        // Try multiple ways to ensure scrolling works
+        
+        // 1. Direct scrollIntoView (most reliable)
+        sectionElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start'
+        });
+        
+        // 2. Update hash in URL (fallback)
+        setTimeout(() => {
+          window.location.hash = id;
+        }, 100);
+        
+        // 3. Try simple scroll if needed
+        setTimeout(() => {
+          const yOffset = sectionElement.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: yOffset, behavior: 'smooth' });
+        }, 200);
+        
+      } catch (error) {
+        console.error('Error during scroll:', error);
+        // Ultimate fallback
+        window.location.hash = id;
+      }
+    } else {
+      console.error(`Section with id "${id}" not found`);
+    }
   };
 
   return (

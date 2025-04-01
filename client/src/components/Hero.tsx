@@ -69,8 +69,35 @@ const Hero = () => {
               setActiveSection("about");
               setTimeOfLastClick(Date.now());
               
-              // Use the utility function to scroll
-              scrollToSection("about");
+              // Find the section element
+              const sectionElement = document.getElementById("about");
+              if (sectionElement) {
+                console.log(`Found 'about' section element`);
+                
+                try {
+                  // 1. Direct scrollIntoView (most reliable)
+                  sectionElement.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start'
+                  });
+                  
+                  // 2. Update hash in URL (fallback)
+                  setTimeout(() => {
+                    window.location.hash = "about";
+                  }, 100);
+                  
+                  // 3. Try manual scroll to position
+                  setTimeout(() => {
+                    const yOffset = sectionElement.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top: yOffset, behavior: 'smooth' });
+                  }, 200);
+                  
+                } catch (error) {
+                  console.error('Error during scroll:', error);
+                  // Ultimate fallback
+                  window.location.hash = "about";
+                }
+              }
             }}
             className="group flex items-center gap-2 border-2 border-secondary text-secondary px-7 py-4 rounded font-mono hover:bg-secondary/10 transition-colors duration-300"
           >
