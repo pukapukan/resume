@@ -20,8 +20,23 @@ const navLinks: NavLink[] = [
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { theme, toggleTheme } = useThemeStore();
   const { activeSection, setActiveSection } = useSectionStore();
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,12 +99,12 @@ const Navbar = () => {
     <nav
       className={cn(
         "fixed top-0 w-full py-5 z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-background/90 backdrop-blur-md border-b border-border" 
+        isScrolled || isMenuOpen || isMobile
+          ? "bg-background/90 backdrop-blur-md border-b border-border shadow-sm" 
           : "bg-transparent"
       )}
     >
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         <a 
           href="#hero" 
           className="text-secondary font-mono text-xl font-bold"
@@ -139,34 +154,36 @@ const Navbar = () => {
           
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-text hover:text-secondary transition-colors"
+            className="p-2 rounded-full bg-primary/10 text-text hover:text-secondary transition-colors"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[73px] bg-background/95 backdrop-blur-md border-t border-border z-40 flex flex-col items-center justify-center">
-          <ul className="flex flex-col items-center gap-8">
-            {navLinks.map((link, index) => (
-              <li key={link.id}>
-                <button
-                  onClick={(e) => handleNavClick(e, link.id)}
-                  className={cn(
-                    "font-mono text-lg transition-colors duration-300",
-                    activeSection === link.id
-                      ? "text-secondary"
-                      : "text-text hover:text-secondary"
-                  )}
-                >
-                  <span className="text-secondary">0{index + 1}.</span> {link.title}
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="md:hidden fixed inset-0 top-[72px] bg-background/95 backdrop-blur-md border-t border-border z-40 flex flex-col items-center justify-center overflow-y-auto">
+          <div className="w-full max-w-md mx-auto px-6 py-12">
+            <ul className="flex flex-col items-center gap-10">
+              {navLinks.map((link, index) => (
+                <li key={link.id}>
+                  <button
+                    onClick={(e) => handleNavClick(e, link.id)}
+                    className={cn(
+                      "font-mono text-lg transition-colors duration-300 py-3 px-4",
+                      activeSection === link.id
+                        ? "text-secondary"
+                        : "text-text hover:text-secondary"
+                    )}
+                  >
+                    <span className="text-secondary">0{index + 1}.</span> {link.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </nav>
