@@ -69,7 +69,7 @@ const Projects = () => {
     <section
       id="projects"
       ref={ref}
-      className="relative py-24 px-6 min-h-screen"
+      className="relative py-24 px-6 min-h-screen scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto w-full">
         <SectionHeading title="Some Things I've Built" number="03" />

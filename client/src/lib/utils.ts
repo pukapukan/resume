@@ -16,8 +16,8 @@ const setLocalStorage = (key: string, value: any): void =>
 export function scrollToSection(sectionId: string): void {
   console.log(`Attempting to scroll to section: ${sectionId}`);
   
-  // Use requestAnimationFrame to ensure DOM is ready
-  requestAnimationFrame(() => {
+  // Use setTimeout to ensure DOM is fully rendered, especially when using libraries like framer-motion
+  setTimeout(() => {
     // Find the target element
     const element = document.getElementById(sectionId);
     
@@ -31,24 +31,36 @@ export function scrollToSection(sectionId: string): void {
     const navbar = document.querySelector('nav');
     const navbarHeight = navbar ? navbar.offsetHeight : 80;
     
-    // Get current scroll position
-    const scrollY = window.scrollY || window.pageYOffset;
-    
-    // Calculate the element's position relative to the document
+    // Calculate the element's position with getBoundingClientRect()
     const elementRect = element.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
     const absoluteElementTop = elementRect.top + scrollY;
     const offsetPosition = absoluteElementTop - navbarHeight - 20;
     
     console.log(`Scrolling to section ${sectionId} at position: ${offsetPosition}`);
     
-    // Scroll to the element with the calculated offset
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-    
-    console.log(`Navigation complete to section: ${sectionId}`);
-  });
+    try {
+      // Attempt to scroll with smooth behavior
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      // Fallback to ensure we get to the right position even if smooth scrolling fails
+      setTimeout(() => {
+        if (Math.abs(window.scrollY - offsetPosition) > 50) {
+          console.log("Smooth scroll may have failed, using fallback");
+          window.scrollTo(0, offsetPosition);
+        }
+      }, 500);
+      
+      console.log(`Navigation complete to section: ${sectionId}`);
+    } catch (error) {
+      console.error("Error during scroll:", error);
+      // Hard fallback
+      window.scrollTo(0, offsetPosition);
+    }
+  }, 50); // Small delay to ensure rendering is complete
 }
 
 export { getLocalStorage, setLocalStorage };

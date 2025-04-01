@@ -22,7 +22,7 @@ const Resume = () => {
     <section
       id="resume"
       ref={ref}
-      className="py-20 px-6"
+      className="py-20 px-6 scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Resume" number="05" center />

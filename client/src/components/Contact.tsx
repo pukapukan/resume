@@ -54,7 +54,7 @@ const Contact = () => {
     <section
       id="contact"
       ref={ref}
-      className="relative py-24 px-6 min-h-[80vh] flex items-center"
+      className="relative py-24 px-6 min-h-[80vh] flex items-center scroll-mt-24"
     >
       <div className="max-w-3xl mx-auto w-full">
         <SectionHeading title="Get In Touch" number="04" center />

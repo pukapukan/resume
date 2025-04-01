@@ -31,7 +31,7 @@ const Hero = () => {
     <section
       id="hero"
       ref={ref}
-      className="relative w-full h-screen flex items-center justify-center px-6"
+      className="relative w-full h-screen flex items-center justify-center px-6 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto flex flex-col items-start">
         <div className="mb-6 animate-fadeIn">

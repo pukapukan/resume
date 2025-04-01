@@ -23,7 +23,7 @@ const About = () => {
     <section
       id="about"
       ref={ref}
-      className="relative py-24 px-6 min-h-screen flex items-center"
+      className="relative py-24 px-6 min-h-screen flex items-center scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto w-full">
         <SectionHeading title="About Me" number="01" />

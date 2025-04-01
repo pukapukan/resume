@@ -34,6 +34,7 @@ const Navbar = () => {
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
+    console.log(`Navbar: clicking on ${id} section`);
     
     // Close mobile menu if open
     setIsMenuOpen(false);
@@ -44,8 +45,10 @@ const Navbar = () => {
     // Mark this as a manual navigation
     useSectionStore.getState().setTimeOfLastClick(Date.now());
     
-    // Use the reusable scroll function
-    scrollToSection(id);
+    // Use the reusable scroll function with a small delay to ensure any rendering is complete
+    setTimeout(() => {
+      scrollToSection(id);
+    }, 10);
   };
 
   return (
