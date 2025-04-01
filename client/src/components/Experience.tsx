@@ -105,12 +105,12 @@ const Experience = () => {
         <div className={`mt-16 ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
           <div className="flex flex-col md:flex-row gap-8 md:gap-16">
             {/* Tab Navigation */}
-            <div className="flex md:flex-col overflow-x-auto md:overflow-x-visible scrollbar-hide border-b md:border-b-0 md:border-l border-border">
+            <div className="flex flex-row md:flex-col overflow-x-auto scrollbar-hide border-b md:border-b-0 md:border-l border-border">
               {experiences.map((exp, index) => (
                 <button
                   key={index}
                   className={cn(
-                    "py-3 px-4 md:px-6 whitespace-nowrap font-mono text-sm transition-all relative",
+                    "py-3 px-3 md:px-6 whitespace-nowrap font-mono text-sm transition-all relative min-w-[80px] text-center",
                     activeTab === index
                       ? "text-secondary bg-secondary/5 md:bg-transparent border-b-2 md:border-b-0 md:border-l-2 border-secondary md:-ml-[2px]"
                       : "text-text hover:bg-secondary/5 hover:text-secondary"
@@ -123,16 +123,16 @@ const Experience = () => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0 min-h-[300px] md:min-h-[350px] transition-all duration-300">
+            <div className="flex-1 min-w-0 min-h-[300px] md:min-h-[350px] transition-all duration-300 relative">
               {experiences.map((exp, index) => (
                 <div 
                   key={index}
-                  className={`experience-item transition-opacity duration-300 absolute inset-0 ${
+                  className={`experience-item transition-opacity duration-300 absolute w-full ${
                     activeTab === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
                   }`}
                 >
-                  <h3 className="text-xl md:text-2xl font-bold text-text">
-                    {exp.position}{" "}
+                  <h3 className="text-xl md:text-2xl font-bold text-text flex flex-wrap">
+                    <span className="mr-2">{exp.position}</span>
                     <span className="text-secondary company-name">@ {exp.company}</span>
                   </h3>
                   
