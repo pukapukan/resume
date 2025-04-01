@@ -98,9 +98,9 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "fixed top-0 w-full py-5 z-50 transition-all duration-300",
+        "fixed top-0 w-full py-4 z-50 transition-all duration-300",
         isScrolled || isMenuOpen || isMobile
-          ? "bg-background/90 backdrop-blur-md border-b border-border shadow-sm" 
+          ? "bg-background/95 backdrop-blur-lg border-b border-border shadow-md" 
           : "bg-transparent"
       )}
     >
@@ -146,7 +146,7 @@ const Navbar = () => {
         <div className="md:hidden flex items-center gap-4">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-primary/10 text-text hover:bg-primary/20 transition-colors"
+            className="p-2 rounded-full bg-primary/30 text-text hover:bg-primary/40 transition-colors"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -154,7 +154,12 @@ const Navbar = () => {
           
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 rounded-full bg-primary/10 text-text hover:text-secondary transition-colors"
+            className={cn(
+              "p-2 rounded-full transition-colors",
+              isMenuOpen 
+                ? "bg-secondary/20 text-secondary" 
+                : "bg-primary/30 text-text hover:bg-primary/40"
+            )}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -164,21 +169,21 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[72px] bg-background/95 backdrop-blur-md border-t border-border z-40 flex flex-col items-center justify-center overflow-y-auto">
+        <div className="md:hidden fixed inset-0 top-[68px] bg-background border-t border-border z-40 flex flex-col items-center justify-center overflow-y-auto">
           <div className="w-full max-w-md mx-auto px-6 py-12">
             <ul className="flex flex-col items-center gap-10">
               {navLinks.map((link, index) => (
-                <li key={link.id}>
+                <li key={link.id} className="w-full text-center">
                   <button
                     onClick={(e) => handleNavClick(e, link.id)}
                     className={cn(
-                      "font-mono text-lg transition-colors duration-300 py-3 px-4",
+                      "font-mono text-lg transition-colors duration-300 py-4 px-6 w-full rounded-md",
                       activeSection === link.id
-                        ? "text-secondary"
-                        : "text-text hover:text-secondary"
+                        ? "text-secondary bg-secondary/10"
+                        : "text-text hover:text-secondary hover:bg-primary/10"
                     )}
                   >
-                    <span className="text-secondary">0{index + 1}.</span> {link.title}
+                    <span className="text-secondary mr-2">0{index + 1}.</span> {link.title}
                   </button>
                 </li>
               ))}
