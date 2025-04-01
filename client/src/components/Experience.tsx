@@ -3,6 +3,7 @@ import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
 import { cn, scrollToSection } from "../lib/utils";
+import Globe from "./Globe";
 
 interface ExperienceItem {
   company: string;
@@ -93,9 +94,12 @@ const Experience = () => {
     <section
       id="experience"
       ref={ref}
-      className="relative py-24 px-6 min-h-screen flex items-center scroll-mt-24"
+      className="relative py-24 px-6 min-h-screen flex items-center scroll-mt-24 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full">
+      {/* Globe Background Component */}
+      <Globe />
+      
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         <SectionHeading title="Where I've Worked" number="02" />
 
         <div className={`mt-16 ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
@@ -120,38 +124,47 @@ const Experience = () => {
 
             {/* Content */}
             <div className="flex-1 min-w-0 min-h-[300px] md:min-h-[350px] transition-all duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-text">
-                {experiences[activeTab].position}{" "}
-                <span className="text-secondary">@ {experiences[activeTab].company}</span>
-              </h3>
-              
-              <p className="text-muted-foreground font-mono mt-1 mb-4">
-                {experiences[activeTab].duration}
-              </p>
-              
-              <p className="text-text text-sm mb-2 italic">
-                {experiences[activeTab].location}
-              </p>
-              
-              <ul className="space-y-4 mt-6">
-                {experiences[activeTab].description.map((desc, i) => (
-                  <li key={i} className="flex gap-2 text-text">
-                    <span className="text-secondary flex-shrink-0 mt-1">▹</span>
-                    <span>{desc}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              {experiences[activeTab].techs && (
-                <div className="mt-6 pt-4 border-t border-border">
-                  <h4 className="text-secondary font-mono text-sm mb-2">
-                    Technologies Used:
-                  </h4>
-                  <p className="text-muted-foreground">
-                    {experiences[activeTab].techs}
+              {experiences.map((exp, index) => (
+                <div 
+                  key={index}
+                  className={`experience-item transition-opacity duration-300 absolute inset-0 ${
+                    activeTab === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
+                >
+                  <h3 className="text-xl md:text-2xl font-bold text-text">
+                    {exp.position}{" "}
+                    <span className="text-secondary company-name">@ {exp.company}</span>
+                  </h3>
+                  
+                  <p className="text-muted-foreground font-mono mt-1 mb-4">
+                    {exp.duration}
                   </p>
+                  
+                  <p className="text-text text-sm mb-2 italic">
+                    {exp.location}
+                  </p>
+                  
+                  <ul className="space-y-4 mt-6">
+                    {exp.description.map((desc, i) => (
+                      <li key={i} className="flex gap-2 text-text">
+                        <span className="text-secondary flex-shrink-0 mt-1">▹</span>
+                        <span>{desc}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  {exp.techs && (
+                    <div className="mt-6 pt-4 border-t border-border">
+                      <h4 className="text-secondary font-mono text-sm mb-2">
+                        Technologies Used:
+                      </h4>
+                      <p className="text-muted-foreground">
+                        {exp.techs}
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
