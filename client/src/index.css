@@ -41,3 +41,62 @@ canvas {
   height: 100% !important;
   touch-action: none;
 }
+
+/* Hero section animations */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth typewriter animation */
+.hero-heading {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInSlide 0.6s ease-out forwards;
+}
+
+.hero-typewriter {
+  position: relative;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInSlide 0.6s ease-out 0.3s forwards;
+}
+
+.hero-typewriter::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 70%;
+  width: 3px;
+  background-color: #64FFDA;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
-import { scrollToSection } from "../lib/utils";
 import SectionHeading from "./ui/section-heading";
 import { ExternalLink, Github, ChevronRight } from "lucide-react";
 
@@ -9,6 +8,7 @@ interface Project {
   title: string;
   description: string;
   image: string;
+  company: string;
   stack: string[];
   links: {
     github?: string;
@@ -20,29 +20,33 @@ const projects: Project[] = [
   {
     title: "Stripe Fraud Protection System",
     description: "Led the scaling of Stripe's fraud protection system, expanding supported payment methods by 50x. The initiative culminated in a successful alpha/beta launch screening $10MM+ in transactions per day and reducing fraud rates by 30%+ on major payment methods.",
-    image: "/textures/wood.jpg", // Using provided texture
+    image: "/assets/projects/stripe-fraud.svg",
+    company: "Stripe",
     stack: ["Java", "Ruby", "TypeScript", "React", "GraphQL", "gRPC"],
     links: {}
   },
   {
     title: "Card Image Verification App",
     description: "Designed and integrated a vision ML-based web app, specifically a card image verification application, into the Stripe ecosystem. The application screened fraudulent attempts using fake cards, significantly enhancing security.",
-    image: "/textures/asphalt.png", // Using provided texture
+    image: "/assets/projects/card-verification.svg",
+    company: "Stripe",
     stack: ["Node.js", "TensorFlow.js", "TypeScript", "React"],
     links: {}
   },
   {
     title: "Amazon Website Latency Optimization",
     description: "Spearheaded cross-functional initiatives to optimize website latency, generating $30MM+ in annual revenue gains. Implemented performant frontend solutions and backend optimizations.",
-    image: "/textures/grass.png", // Using provided texture
+    image: "/assets/projects/amazon-latency.svg",
+    company: "Amazon",
     stack: ["JavaScript", "Java", "Performance Profiling"],
     links: {}
   },
   {
     title: "Community Platform",
     description: "Designed and deployed a local community platform for connecting residents and local businesses. Built with modern technologies and deployed on AWS infrastructure.",
-    image: "/textures/sand.jpg", // Using provided texture
-    stack: ["Node.js", "React.js", "GraphQL", "Redis", "AWS"],
+    image: "/assets/projects/community-platform.svg",
+    company: "Personal Project",
+    stack: ["Node.js", "React", "GraphQL", "Redis", "AWS"],
     links: {
       github: "https://github.com",
       live: "https://example.com"
@@ -92,31 +96,40 @@ const Projects = () => {
               key={index}
               className={`relative flex flex-col ${
                 index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              } items-center gap-8 animate-fadeIn`}
+              } items-center gap-12 animate-fadeIn`}
               style={{animationDelay: `${Math.min(index * 150, 500)}ms`}} 
             >
               {/* Project Image */}
-              <div className="w-full md:w-7/12 h-[300px] md:h-[400px] relative rounded-md overflow-hidden group">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${project.image})` }}
+              <div className="w-full md:w-6/12 h-[300px] md:h-[380px] relative rounded-lg overflow-hidden group shadow-xl transition-transform duration-300 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-card/80"></div>
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="absolute inset-0 w-full h-full object-contain p-4 z-10"
                 />
-                <div className="absolute inset-0 bg-background opacity-80 transition-opacity group-hover:opacity-50" />
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-primary"></div>
               </div>
 
               {/* Project Content */}
               <div
-                className={`w-full md:w-5/12 z-10 ${
+                className={`w-full md:w-6/12 z-10 ${
                   index % 2 === 0 ? "md:ml-auto md:text-right" : "md:mr-auto"
                 }`}
               >
-                <p className="font-mono text-secondary mb-2">Featured Project</p>
-                <h3 className="text-2xl font-bold text-text mb-4">
+                <div className="mb-2 flex items-center gap-2 font-mono text-secondary text-sm">
+                  <span>{index % 2 === 0 ? "" : "Featured Project @"}</span>
+                  <span className="bg-secondary/10 px-3 py-1 rounded-full text-secondary">
+                    {project.company}
+                  </span>
+                  <span>{index % 2 === 1 ? "" : "Featured Project"}</span>
+                </div>
+                
+                <h3 className="text-3xl font-bold text-text mb-4 tracking-tight">
                   {project.title}
                 </h3>
                 
-                <div className="bg-card p-6 rounded-md shadow-xl mb-4">
-                  <p className="text-card-foreground">{project.description}</p>
+                <div className="bg-card p-6 rounded-lg shadow-xl mb-6 border border-primary/10 backdrop-blur-sm">
+                  <p className="text-card-foreground leading-relaxed">{project.description}</p>
                 </div>
                 
                 <ul className={`flex flex-wrap gap-2 mb-6 ${
@@ -125,7 +138,7 @@ const Projects = () => {
                   {project.stack.map((tech, i) => (
                     <li
                       key={i}
-                      className="font-mono text-sm text-text bg-primary/10 px-3 py-1 rounded"
+                      className="font-mono text-sm text-text bg-secondary/10 px-3 py-1 rounded-full"
                     >
                       {tech}
                     </li>
@@ -140,10 +153,10 @@ const Projects = () => {
                       href={project.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-text hover:text-secondary transition-colors"
+                      className="text-text hover:text-secondary transition-colors p-2 bg-card rounded-full hover:bg-card/80"
                       aria-label="GitHub Repository"
                     >
-                      <Github size={20} />
+                      <Github size={22} />
                     </a>
                   )}
                   {project.links.live && (
@@ -151,10 +164,10 @@ const Projects = () => {
                       href={project.links.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-text hover:text-secondary transition-colors"
+                      className="text-text hover:text-secondary transition-colors p-2 bg-card rounded-full hover:bg-card/80"
                       aria-label="Live Demo"
                     >
-                      <ExternalLink size={20} />
+                      <ExternalLink size={22} />
                     </a>
                   )}
                 </div>
@@ -171,7 +184,7 @@ const Projects = () => {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-secondary hover:underline font-mono"
+            className="inline-flex items-center gap-2 text-secondary hover:bg-secondary/10 font-mono py-2 px-4 rounded-full transition-colors"
           >
             View more projects on GitHub
             <ChevronRight size={16} />
