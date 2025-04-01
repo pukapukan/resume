@@ -37,6 +37,11 @@ const Navbar = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+  
+  // Debug mobile menu state
+  useEffect(() => {
+    console.log("Mobile menu state:", isMenuOpen ? "open" : "closed");
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,11 +158,14 @@ const Navbar = () => {
           </button>
           
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              console.log("Toggle mobile menu from", isMenuOpen, "to", !isMenuOpen);
+              setIsMenuOpen(prev => !prev);
+            }}
             className={cn(
               "p-2 rounded-full transition-colors",
               isMenuOpen 
-                ? "bg-secondary/20 text-secondary" 
+                ? "bg-secondary/30 text-secondary" 
                 : "bg-primary/30 text-text hover:bg-primary/40"
             )}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -167,30 +175,38 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[68px] bg-background border-t border-border z-40 flex flex-col items-center justify-center overflow-y-auto">
-          <div className="w-full max-w-md mx-auto px-6 py-12">
-            <ul className="flex flex-col items-center gap-10">
-              {navLinks.map((link, index) => (
-                <li key={link.id} className="w-full text-center">
-                  <button
-                    onClick={(e) => handleNavClick(e, link.id)}
-                    className={cn(
-                      "font-mono text-lg transition-colors duration-300 py-4 px-6 w-full rounded-md",
-                      activeSection === link.id
-                        ? "text-secondary bg-secondary/10"
-                        : "text-text hover:text-secondary hover:bg-primary/10"
-                    )}
-                  >
-                    <span className="text-secondary mr-2">0{index + 1}.</span> {link.title}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+      {/* Mobile Menu - Always in DOM but conditionally displayed */}
+      <div 
+        className={cn(
+          "md:hidden fixed inset-0 top-[68px] bg-background border-t border-border z-40 flex flex-col items-center justify-start pt-8 overflow-y-auto",
+          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        )}
+        style={{
+          transition: "opacity 0.3s ease, visibility 0.3s ease",
+          height: "calc(100vh - 68px)",
+          boxShadow: "0 8px 16px rgba(0,0,0,0.2)"
+        }}
+      >
+        <div className="w-full max-w-md mx-auto px-6 py-12">
+          <ul className="flex flex-col items-center gap-8">
+            {navLinks.map((link, index) => (
+              <li key={link.id} className="w-full text-center">
+                <button
+                  onClick={(e) => handleNavClick(e, link.id)}
+                  className={cn(
+                    "font-mono text-xl transition-colors duration-300 py-4 px-6 w-full rounded-md bg-primary/20",
+                    activeSection === link.id
+                      ? "text-secondary bg-secondary/20"
+                      : "text-text hover:text-secondary hover:bg-primary/30"
+                  )}
+                >
+                  <span className="text-secondary mr-2">0{index + 1}.</span> {link.title}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
