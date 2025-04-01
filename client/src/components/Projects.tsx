@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import { scrollToSection } from "../lib/utils";
@@ -53,7 +53,7 @@ const projects: Project[] = [
 const Projects = () => {
   const { setActiveSection } = useSectionStore();
   const { ref, inView } = useCustomInView({
-    threshold: 0.3,
+    threshold: 0.1, // Lower threshold to make content visible earlier
     respectClickState: true
   });
 
@@ -63,7 +63,19 @@ const Projects = () => {
     }
   }, [inView, setActiveSection]);
 
-  // CSS animations are used instead of variants
+  // Use a separate state to track when to show content
+  const [showContent, setShowContent] = useState(false);
+  
+  // Show content with a slight delay after section comes into view
+  useEffect(() => {
+    if (inView && !showContent) {
+      // Small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [inView, showContent]);
 
   return (
     <section
@@ -74,14 +86,14 @@ const Projects = () => {
       <div className="max-w-7xl mx-auto w-full">
         <SectionHeading title="Some Things I've Built" number="03" />
 
-        <div className={`mt-16 space-y-32 ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
+        <div className={`mt-16 space-y-32 ${showContent ? 'animate-fadeIn' : 'opacity-0'}`}>
           {projects.map((project, index) => (
             <div
               key={index}
               className={`relative flex flex-col ${
                 index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
               } items-center gap-8 animate-fadeIn`}
-              style={{animationDelay: `${index * 200}ms`}}
+              style={{animationDelay: `${Math.min(index * 150, 500)}ms`}} 
             >
               {/* Project Image */}
               <div className="w-full md:w-7/12 h-[300px] md:h-[400px] relative rounded-md overflow-hidden group">
@@ -152,8 +164,8 @@ const Projects = () => {
         </div>
 
         <div
-          className={`mt-24 text-center transition-all duration-500 ease-in-out ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
-          style={{transitionDelay: '500ms'}}
+          className={`mt-24 text-center transition-all duration-500 ease-in-out ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+          style={{transitionDelay: '300ms'}}
         >
           <a
             href="https://github.com"

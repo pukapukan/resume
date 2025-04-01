@@ -39,3 +39,12 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "start"
+mode = "sequential"
+author = 1954067
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start Game"
