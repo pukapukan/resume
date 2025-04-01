@@ -47,8 +47,8 @@ const StripeBackground: React.FC = () => {
           Math.random() * canvas.height,
           Math.random() * 300 + 200, // size between 200-500
           colors[i % colors.length],
-          Math.random() * 0.0005 - 0.00025, // x velocity
-          Math.random() * 0.0005 - 0.00025  // y velocity
+          Math.random() * 0.0001 - 0.00005, // x velocity (5x slower)
+          Math.random() * 0.0001 - 0.00005  // y velocity (5x slower)
         ));
       }
     };
@@ -114,26 +114,26 @@ class Blob {
     this.x += this.vx * timestamp;
     this.y += this.vy * timestamp;
     
-    // Slowly rotate
-    if (timestamp - this.lastUpdate > 50) {
-      this.angle += 0.002;
+    // Very slowly rotate
+    if (timestamp - this.lastUpdate > 100) { // Less frequent updates
+      this.angle += 0.0005; // Much slower rotation (4x slower)
       this.lastUpdate = timestamp;
     }
     
     // Bounce off edges with a little randomness
     if (this.x < -this.size/2 || this.x > canvasWidth + this.size/2) {
       this.vx *= -1;
-      this.vx += (Math.random() * 0.0002 - 0.0001); // Add slight randomness
+      this.vx += (Math.random() * 0.00005 - 0.000025); // Add slight randomness (reduced)
     }
     
     if (this.y < -this.size/2 || this.y > canvasHeight + this.size/2) {
       this.vy *= -1;
-      this.vy += (Math.random() * 0.0002 - 0.0001); // Add slight randomness
+      this.vy += (Math.random() * 0.00005 - 0.000025); // Add slight randomness (reduced)
     }
     
     // Ensure velocity doesn't get too high or too low
-    const maxVelocity = 0.001;
-    const minVelocity = 0.0001;
+    const maxVelocity = 0.0002; // Lower max velocity
+    const minVelocity = 0.00002; // Lower min velocity
     
     this.vx = Math.max(Math.min(this.vx, maxVelocity), -maxVelocity);
     this.vy = Math.max(Math.min(this.vy, maxVelocity), -maxVelocity);

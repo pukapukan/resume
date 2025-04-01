@@ -120,9 +120,9 @@ class Dot {
     this.size = size;
     this.color = color;
     
-    // Random velocity (very slow)
-    this.vx = Math.random() * 0.2 - 0.1;
-    this.vy = Math.random() * 0.2 - 0.1;
+    // Random velocity (extremely slow)
+    this.vx = Math.random() * 0.05 - 0.025; // 4x slower
+    this.vy = Math.random() * 0.05 - 0.025; // 4x slower
   }
   
   update(mouse: { x: number, y: number }, scrollY: number, width: number, height: number) {
@@ -145,9 +145,9 @@ class Dot {
       const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
       const force = (mouseInfluenceRadius - mouseDistance) / mouseInfluenceRadius;
       
-      // Move away from mouse (subtle effect)
-      this.x -= Math.cos(angle) * force * 0.5;
-      this.y -= Math.sin(angle) * force * 0.5;
+      // Move away from mouse (even more subtle effect)
+      this.x -= Math.cos(angle) * force * 0.2; // Reduced from 0.5
+      this.y -= Math.sin(angle) * force * 0.2; // Reduced from 0.5
     }
     
     // Wrap around edges with a buffer

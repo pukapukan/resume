@@ -54,8 +54,8 @@ const GridPattern: React.FC = () => {
       // Draw animated pulse lines
       drawPulseLines(ctx, offset, gridSize, highlightColor);
       
-      // Update offset for animation
-      offset += 0.2;
+      // Update offset for animation (slower)
+      offset += 0.05; // 4x slower
       if (offset > gridSize * 2) offset = 0;
       
       animationFrameId = requestAnimationFrame(animate);
