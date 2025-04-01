@@ -178,13 +178,15 @@ const Navbar = () => {
       {/* Mobile Menu - Always in DOM but conditionally displayed */}
       <div 
         className={cn(
-          "md:hidden fixed inset-0 top-[68px] bg-background border-t border-border z-40 flex flex-col items-center justify-start pt-8 overflow-y-auto",
+          "md:hidden fixed inset-0 top-[68px] bg-background z-40 flex flex-col items-center justify-start pt-8 overflow-y-auto",
           isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         )}
         style={{
           transition: "opacity 0.3s ease, visibility 0.3s ease",
           height: "calc(100vh - 68px)",
-          boxShadow: "0 8px 16px rgba(0,0,0,0.2)"
+          boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+          backgroundColor: "#0A192F", // Hardcoded background color for mobile
+          borderTop: "1px solid rgba(255,255,255,0.1)"
         }}
       >
         <div className="w-full max-w-md mx-auto px-6 py-12">
@@ -194,13 +196,13 @@ const Navbar = () => {
                 <button
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "font-mono text-xl transition-colors duration-300 py-4 px-6 w-full rounded-md bg-primary/20",
+                    "font-mono text-xl transition-colors duration-300 py-5 px-6 w-full rounded-md",
                     activeSection === link.id
-                      ? "text-secondary bg-secondary/20"
-                      : "text-text hover:text-secondary hover:bg-primary/30"
+                      ? "bg-secondary/20 text-secondary border border-secondary/30" 
+                      : "bg-[#112240] text-[#E6F1FF] hover:text-secondary hover:bg-[#172A46] border border-[#112240]"
                   )}
                 >
-                  <span className="text-secondary mr-2">0{index + 1}.</span> {link.title}
+                  <span className="text-secondary mr-2 font-bold">0{index + 1}.</span> {link.title}
                 </button>
               </li>
             ))}
