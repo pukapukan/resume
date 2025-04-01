@@ -60,10 +60,6 @@ const About = () => {
           <div className="space-y-8 animate-fadeIn delay-300">
             <h3 className="text-2xl font-bold text-text">Technical Proficiencies</h3>
             
-            {/* 3D Interactive Skills Visualization */}
-            <Suspense fallback={<div className="h-[400px] flex items-center justify-center">Loading skills...</div>}>
-              <InteractiveSkills />
-            </Suspense>
             
             <div>
               <h4 className="text-xl text-secondary mb-4">Languages & Frameworks</h4>

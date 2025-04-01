@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader } from "./components/Loader";
 import Navbar from "./components/Navbar";
@@ -9,7 +9,9 @@ import Projects from "./components/Projects";
 import Resume from "./components/Resume";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import Background3D from "./components/Background3D";
+import StripeBackground from "./components/StripeBackground";
+import GridPattern from "./components/GridPattern";
+import FloatingDots from "./components/FloatingDots";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { useThemeStore } from "./lib/stores/useThemeStore";
@@ -87,10 +89,10 @@ function App() {
           <Loader />
         ) : (
           <>
-            {/* 3D Background */}
-            <Suspense fallback={null}>
-              <Background3D />
-            </Suspense>
+            {/* Stripe-inspired animated background with multiple layered effects */}
+            <StripeBackground />
+            <GridPattern />
+            <FloatingDots />
             
             <ScrollControls>
               <motion.div 
