@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Loader } from "./components/Loader";
 import Navbar from "./components/Navbar";
@@ -9,6 +9,7 @@ import Projects from "./components/Projects";
 import Resume from "./components/Resume";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Background3D from "./components/Background3D";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { useThemeStore } from "./lib/stores/useThemeStore";
@@ -85,25 +86,32 @@ function App() {
         {isLoading ? (
           <Loader />
         ) : (
-          <ScrollControls>
-            <motion.div 
-              className="relative"
-              initial="hidden"
-              animate="visible"
-              variants={contentVariants}
-            >
-              <Navbar />
-              <div>
-                <Hero />
-                <About />
-                <Experience />
-                <Projects />
-                <Resume />
-                <Contact />
-                <Footer />
-              </div>
-            </motion.div>
-          </ScrollControls>
+          <>
+            {/* 3D Background */}
+            <Suspense fallback={null}>
+              <Background3D />
+            </Suspense>
+            
+            <ScrollControls>
+              <motion.div 
+                className="relative"
+                initial="hidden"
+                animate="visible"
+                variants={contentVariants}
+              >
+                <Navbar />
+                <div>
+                  <Hero />
+                  <About />
+                  <Experience />
+                  <Projects />
+                  <Resume />
+                  <Contact />
+                  <Footer />
+                </div>
+              </motion.div>
+            </ScrollControls>
+          </>
         )}
       </main>
     </QueryClientProvider>

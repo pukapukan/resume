@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import { scrollToSection } from "../lib/utils";
 import SectionHeading from "./ui/section-heading";
+import InteractiveSkills from "./InteractiveSkills";
 
 const About = () => {
   const { setActiveSection } = useSectionStore();
@@ -58,6 +59,11 @@ const About = () => {
 
           <div className="space-y-8 animate-fadeIn delay-300">
             <h3 className="text-2xl font-bold text-text">Technical Proficiencies</h3>
+            
+            {/* 3D Interactive Skills Visualization */}
+            <Suspense fallback={<div className="h-[400px] flex items-center justify-center">Loading skills...</div>}>
+              <InteractiveSkills />
+            </Suspense>
             
             <div>
               <h4 className="text-xl text-secondary mb-4">Languages & Frameworks</h4>
