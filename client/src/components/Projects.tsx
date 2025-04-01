@@ -99,20 +99,21 @@ const Projects = () => {
               } items-center gap-12 animate-fadeIn`}
               style={{animationDelay: `${Math.min(index * 150, 500)}ms`}} 
             >
-              {/* Project Image */}
-              <div className="w-full md:w-6/12 h-[300px] md:h-[380px] relative rounded-lg overflow-hidden group shadow-xl transition-transform duration-300 hover:scale-[1.02]">
-                <div className="absolute inset-0 bg-card/80"></div>
+              {/* Project Image - Smaller and blends with background */}
+              <div className="w-full md:w-5/12 h-[250px] md:h-[300px] relative overflow-hidden group">
                 <img 
                   src={project.image} 
                   alt={project.title} 
-                  className="absolute inset-0 w-full h-full object-contain p-4 z-10"
+                  className="w-full h-full object-contain z-10 transition-transform duration-300 group-hover:scale-[1.03]"
                 />
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-primary"></div>
+                
+                {/* Subtle glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* Project Content */}
               <div
-                className={`w-full md:w-6/12 z-10 ${
+                className={`w-full md:w-7/12 z-10 ${
                   index % 2 === 0 ? "md:ml-auto md:text-right" : "md:mr-auto"
                 }`}
               >
