@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
 import { ExternalLink, Github, ChevronRight } from "lucide-react";
-import PixelArtImage from "./PixelArtImage";
+import ProjectArtwork from "./ProjectArtwork";
 
 interface Project {
   title: string;
   description: string;
-  image: string;
+  artworkType: 'fraud-system' | 'card-verification' | 'website-optimization' | 'community-platform';
   company: string;
   stack: string[];
   links: {
@@ -21,7 +21,7 @@ const projects: Project[] = [
   {
     title: "Stripe Fraud Protection System",
     description: "Led the scaling of Stripe's fraud protection system, expanding supported payment methods by 50x. The initiative culminated in a successful alpha/beta launch screening $10MM+ in transactions per day and reducing fraud rates by 30%+ on major payment methods.",
-    image: "/assets/projects/pixel/stripe-fraud-large.png",
+    artworkType: "fraud-system",
     company: "Stripe",
     stack: ["Java", "Ruby", "TypeScript", "React", "GraphQL", "gRPC"],
     links: {}
@@ -29,7 +29,7 @@ const projects: Project[] = [
   {
     title: "Card Image Verification App",
     description: "Designed and integrated a vision ML-based web app, specifically a card image verification application, into the Stripe ecosystem. The application screened fraudulent attempts using fake cards, significantly enhancing security.",
-    image: "/assets/projects/pixel/card-verification-large.png",
+    artworkType: "card-verification",
     company: "Stripe",
     stack: ["Node.js", "TensorFlow.js", "TypeScript", "React"],
     links: {}
@@ -37,7 +37,7 @@ const projects: Project[] = [
   {
     title: "Amazon Website Latency Optimization",
     description: "Spearheaded cross-functional initiatives to optimize website latency, generating $30MM+ in annual revenue gains. Implemented performant frontend solutions and backend optimizations.",
-    image: "/assets/projects/pixel/amazon-latency-large.png",
+    artworkType: "website-optimization",
     company: "Amazon",
     stack: ["JavaScript", "Java", "Performance Profiling"],
     links: {}
@@ -45,7 +45,7 @@ const projects: Project[] = [
   {
     title: "Community Platform",
     description: "Designed and deployed a local community platform for connecting residents and local businesses. Built with modern technologies and deployed on AWS infrastructure.",
-    image: "/assets/projects/pixel/community-platform-large.png",
+    artworkType: "community-platform",
     company: "Personal Project",
     stack: ["Node.js", "React", "GraphQL", "Redis", "AWS"],
     links: {
@@ -100,12 +100,12 @@ const Projects = () => {
               } items-center gap-12 animate-fadeIn`}
               style={{animationDelay: `${Math.min(index * 150, 500)}ms`}} 
             >
-              {/* Project Image with Pixel Art effect */}
+              {/* Project Artwork with Retro Pixel Art effect */}
               <div className="w-full md:w-5/12 h-[250px] md:h-[300px] pixel-art-container group">
-                <PixelArtImage 
-                  src={project.image} 
-                  alt={project.title} 
-                  className="w-full h-full object-contain z-10"
+                <ProjectArtwork 
+                  type={project.artworkType}
+                  inView={showContent}
+                  className="w-full h-full z-10"
                 />
                 
                 {/* Subtle glow effect on hover */}

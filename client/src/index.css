@@ -147,3 +147,25 @@ canvas {
   box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
   border-color: #64ffda;
 }
+
+/* Grid pattern background for our SVGs */
+.grid-pattern {
+  stroke: rgba(100, 255, 218, 0.2);
+  stroke-width: 0.5;
+}
+
+/* Animation for resolution transition */
+@keyframes increaseResolution {
+  0% {
+    filter: blur(3px) brightness(0.9);
+    transform: scale(0.98);
+  }
+  100% {
+    filter: blur(0) brightness(1);
+    transform: scale(1);
+  }
+}
+
+.animate-resolution {
+  animation: increaseResolution 0.8s ease forwards;
+}
