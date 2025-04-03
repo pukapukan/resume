@@ -125,3 +125,25 @@ canvas {
   opacity: 0.5;
   font-size: 10px;
 }
+
+/* Pixel art image styles */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-art-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: #0a192f;
+  border: 1px solid rgba(100, 255, 218, 0.3);
+  transition: all 0.3s ease;
+}
+
+.pixel-art-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+  border-color: #64ffda;
+}

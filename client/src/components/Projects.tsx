@@ -3,6 +3,7 @@ import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
 import { ExternalLink, Github, ChevronRight } from "lucide-react";
+import PixelArtImage from "./PixelArtImage";
 
 interface Project {
   title: string;
@@ -20,7 +21,7 @@ const projects: Project[] = [
   {
     title: "Stripe Fraud Protection System",
     description: "Led the scaling of Stripe's fraud protection system, expanding supported payment methods by 50x. The initiative culminated in a successful alpha/beta launch screening $10MM+ in transactions per day and reducing fraud rates by 30%+ on major payment methods.",
-    image: "/assets/projects/stripe-fraud.svg",
+    image: "/assets/projects/pixel/stripe-fraud-large.png",
     company: "Stripe",
     stack: ["Java", "Ruby", "TypeScript", "React", "GraphQL", "gRPC"],
     links: {}
@@ -28,7 +29,7 @@ const projects: Project[] = [
   {
     title: "Card Image Verification App",
     description: "Designed and integrated a vision ML-based web app, specifically a card image verification application, into the Stripe ecosystem. The application screened fraudulent attempts using fake cards, significantly enhancing security.",
-    image: "/assets/projects/card-verification.svg",
+    image: "/assets/projects/pixel/card-verification-large.png",
     company: "Stripe",
     stack: ["Node.js", "TensorFlow.js", "TypeScript", "React"],
     links: {}
@@ -36,7 +37,7 @@ const projects: Project[] = [
   {
     title: "Amazon Website Latency Optimization",
     description: "Spearheaded cross-functional initiatives to optimize website latency, generating $30MM+ in annual revenue gains. Implemented performant frontend solutions and backend optimizations.",
-    image: "/assets/projects/amazon-latency.svg",
+    image: "/assets/projects/pixel/amazon-latency-large.png",
     company: "Amazon",
     stack: ["JavaScript", "Java", "Performance Profiling"],
     links: {}
@@ -44,7 +45,7 @@ const projects: Project[] = [
   {
     title: "Community Platform",
     description: "Designed and deployed a local community platform for connecting residents and local businesses. Built with modern technologies and deployed on AWS infrastructure.",
-    image: "/assets/projects/community-platform.svg",
+    image: "/assets/projects/pixel/community-platform-large.png",
     company: "Personal Project",
     stack: ["Node.js", "React", "GraphQL", "Redis", "AWS"],
     links: {
@@ -99,12 +100,12 @@ const Projects = () => {
               } items-center gap-12 animate-fadeIn`}
               style={{animationDelay: `${Math.min(index * 150, 500)}ms`}} 
             >
-              {/* Project Image - Smaller and blends with background */}
-              <div className="w-full md:w-5/12 h-[250px] md:h-[300px] relative overflow-hidden group">
-                <img 
+              {/* Project Image with Pixel Art effect */}
+              <div className="w-full md:w-5/12 h-[250px] md:h-[300px] pixel-art-container group">
+                <PixelArtImage 
                   src={project.image} 
                   alt={project.title} 
-                  className="w-full h-full object-contain z-10 transition-transform duration-300 group-hover:scale-[1.03]"
+                  className="w-full h-full object-contain z-10"
                 />
                 
                 {/* Subtle glow effect on hover */}
