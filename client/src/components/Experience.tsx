@@ -66,17 +66,13 @@ const Experience = () => {
   });
 
   // Animation states
-  const [showContent, setShowContent] = useState(false);
   const [activeCompany, setActiveCompany] = useState("Stripe");
 
   useEffect(() => {
     if (inView) {
       setActiveSection("experience");
-      if (!showContent) {
-        setTimeout(() => setShowContent(true), 200);
-      }
     }
-  }, [inView, setActiveSection, showContent]);
+  }, [inView, setActiveSection]);
 
   return (
     <section
@@ -87,115 +83,142 @@ const Experience = () => {
       <div className="notes-container">
         <SectionHeading title="Where I've Worked" number="02" />
 
-        <div className={`mt-16 transition-all duration-700 ${
-          showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          {/* Visual experience representation */}
-          <div className="h-[300px] md:h-[400px] bg-card border border-border rounded-lg mb-16 overflow-hidden relative p-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-50"></div>
-            <div className="relative h-full flex flex-col items-center justify-center">
-              <h3 className="text-xl font-medium text-text mb-8">Global Experience</h3>
-              
-              <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-6">
-                {experiences.map((exp, index) => (
-                  <div 
-                    key={index}
-                    className={`p-5 rounded-lg transition-all duration-300 cursor-pointer
-                      ${activeCompany === exp.company 
-                        ? 'bg-secondary/10 border border-secondary/20 shadow-lg transform scale-105' 
-                        : 'bg-card/60 border border-border/30 hover:bg-card/80'
-                      }`}
-                    onClick={() => setActiveCompany(exp.company)}
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-medium text-secondary">{exp.company}</h4>
-                      <span className="text-xs bg-primary/20 text-text px-2 py-1 rounded-full">
-                        {exp.location.split(',')[0]}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{exp.position}</p>
-                  </div>
-                ))}
-              </div>
-              
-              <p className="text-sm text-muted-foreground mt-8 max-w-md text-center">
-                I've worked across multiple locations, gaining diverse experience and perspectives on software development.
-              </p>
-            </div>
-          </div>
-
+        <div className="mt-16">
           {/* Gates Notes-style quote */}
           <PullQuote 
             quote="Working across different geographical locations has given me a unique perspective on building software that resonates with diverse user bases."
             align="center"
           />
           
-          {/* Experience Timeline - Gates Notes style */}
-          <div className="notes-card p-8 md:p-12 mt-16">
-            <div className="space-y-12">
+          {/* Modern integrated experience section with tabs and content */}
+          <div className="notes-card p-6 md:p-8 mt-10">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Tab Navigation - Left Side */}
+              <div className="lg:w-1/4 flex lg:flex-col overflow-x-auto lg:overflow-visible border-b lg:border-b-0 lg:border-r border-border">
+                {experiences.map((exp, index) => (
+                  <button
+                    key={index}
+                    className={`px-4 py-3 text-left whitespace-nowrap transition-all flex-shrink-0 lg:flex-shrink lg:w-full
+                      ${activeCompany === exp.company 
+                        ? 'border-b-2 lg:border-b-0 lg:border-l-2 border-secondary bg-secondary/5 text-secondary font-medium' 
+                        : 'border-b-2 lg:border-b-0 lg:border-l-2 border-transparent hover:bg-primary/5 hover:text-text/90'
+                      }`}
+                    onClick={() => setActiveCompany(exp.company)}
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-base">{exp.company}</span>
+                      <span className="text-xs text-muted-foreground mt-1">{exp.duration.split(' - ')[0]}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              
+              {/* Content - Right Side */}
               {experiences.map((exp, index) => (
                 <div 
                   key={index}
-                  className={`transition-all duration-300 ${
-                    activeCompany === exp.company 
-                      ? 'bg-primary/5 p-6 rounded-lg shadow-sm border border-secondary/20' 
-                      : 'p-4'
+                  className={`lg:w-3/4 transition-opacity duration-300 ${
+                    activeCompany === exp.company ? 'block opacity-100' : 'hidden opacity-0'
                   }`}
                 >
-                  <div 
-                    className="flex flex-col md:flex-row gap-4 md:gap-8 cursor-pointer"
-                    onClick={() => setActiveCompany(exp.company)}
-                  >
-                    <div className="md:w-1/3 space-y-3">
-                      <div className="flex items-center gap-2 text-secondary font-medium">
-                        <Briefcase size={18} />
-                        <h3 className="text-xl">{exp.company}</h3>
-                      </div>
+                  <div className="flex flex-col space-y-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-text">
+                        {exp.position} <span className="text-secondary">@ {exp.company}</span>
+                      </h3>
                       
-                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <Calendar size={16} />
-                        <span>{exp.duration}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <MapPin size={16} />
-                        <span>{exp.location}</span>
-                      </div>
-                      
-                      <div className="font-medium text-text mt-2">
-                        {exp.position}
+                      <div className="flex items-center gap-4 text-muted-foreground mt-1 text-sm">
+                        <div className="flex items-center gap-1">
+                          <Calendar size={14} />
+                          <span>{exp.duration}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1">
+                          <MapPin size={14} />
+                          <span>{exp.location}</span>
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="md:w-2/3">
-                      <ul className="space-y-3">
-                        {exp.description.map((desc, i) => (
-                          <li key={i} className="flex">
-                            <span className="text-secondary mr-2 mt-1">▹</span>
-                            <span className="text-text">{desc}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      
-                      {exp.techs && (
-                        <div className="mt-4 pt-4 border-t border-primary/10">
-                          <h4 className="text-sm font-medium text-muted-foreground mb-2">Technologies</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.techs.split(", ").map((tech, i) => (
-                              <span 
-                                key={i} 
-                                className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full"
-                              >
-                                {tech}
-                              </span>
-                            ))}
+                    <ul className="space-y-3 mt-2">
+                      {exp.description.map((desc, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="text-secondary flex-shrink-0 mt-1">▹</span>
+                          <span className="text-text">{desc}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    {exp.techs && (
+                      <div className="mt-4 pt-4 border-t border-primary/10">
+                        <h4 className="text-sm font-medium text-text mb-3">Technologies</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {exp.techs.split(", ").map((tech, i) => (
+                            <span 
+                              key={i} 
+                              className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Location card - integrated within each experience */}
+                    <div className="mt-4 pt-4 border-t border-primary/10">
+                      <div className="rounded-lg bg-primary/5 p-4 mt-2">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 rounded-full bg-secondary/10 text-secondary">
+                            <MapPin size={16} />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-text">{exp.location}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {exp.company === "Stripe" && "Headquarters of Stripe's global payment operations."}
+                              {exp.company === "Amazon" && "Hub for Amazon's retail tech innovation."}
+                              {exp.company === "Freelance" && "Worked remotely with clients worldwide."}
+                            </p>
                           </div>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+          
+          {/* Key highlights section */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="notes-card p-5">
+              <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4">
+                <Briefcase size={20} />
+              </div>
+              <h3 className="font-medium text-lg mb-2">Global Companies</h3>
+              <p className="text-muted-foreground text-sm">
+                Experience working with industry leaders and innovative startups across different markets.
+              </p>
+            </div>
+            
+            <div className="notes-card p-5">
+              <div className="w-10 h-10 rounded-full bg-green-500/10 text-green-400 flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </div>
+              <h3 className="font-medium text-lg mb-2">Cross-Functional</h3>
+              <p className="text-muted-foreground text-sm">
+                Collaborated with product, design, and business teams to deliver impactful software solutions.
+              </p>
+            </div>
+            
+            <div className="notes-card p-5">
+              <div className="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg>
+              </div>
+              <h3 className="font-medium text-lg mb-2">Leadership</h3>
+              <p className="text-muted-foreground text-sm">
+                Led engineering teams focused on critical business objectives and technical excellence.
+              </p>
             </div>
           </div>
         </div>
