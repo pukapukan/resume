@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader } from "./components/Loader";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
+import HeroAbout from "./components/HeroAbout";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Resume from "./components/Resume";
@@ -107,8 +106,7 @@ function App() {
               >
                 <Navbar />
                 <div>
-                  <Hero />
-                  <About />
+                  <HeroAbout />
                   <Experience />
                   <Projects />
                   <Resume />

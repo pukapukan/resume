@@ -45,10 +45,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      // Check if we've scrolled past the hero section
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+        // Show navbar when about section is at or above the top of the viewport
+        setIsScrolled(aboutSectionTop <= 0 || window.scrollY > window.innerHeight * 0.8);
+      } else {
+        // Fallback to basic scroll distance if section not found
+        setIsScrolled(window.scrollY > window.innerHeight * 0.8);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
+    // Run once on mount to set initial state
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -103,10 +114,12 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled || isMenuOpen || isMobile
-          ? "bg-background/90 backdrop-blur-md border-b border-border/30 py-3 shadow-sm" 
-          : "bg-transparent py-5"
+        "fixed top-0 w-full z-50 transition-all duration-500",
+        isScrolled || isMenuOpen
+          ? "opacity-100 translate-y-0 bg-background/90 backdrop-blur-md border-b border-border/30 py-3 shadow-sm" 
+          : isMobile
+            ? "opacity-100 translate-y-0 bg-transparent py-5"
+            : "opacity-0 -translate-y-full"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
