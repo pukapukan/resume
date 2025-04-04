@@ -1,12 +1,11 @@
 // Environment variables utility
 
-// Check for keys available in the window object (for client-side access)
+// This empty export makes the file a module
+export {};
+
+// Then we can augment the global scope
 declare global {
   interface Window {
-    ENV?: {
-      // Add any environment variables needed here
-    };
+    ENV?: Record<string, string>;
   }
 }
-
-// Export environment variables as needed

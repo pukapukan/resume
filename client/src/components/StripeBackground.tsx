@@ -110,34 +110,50 @@ class Blob {
   }
   
   update(timestamp: number, canvasWidth: number, canvasHeight: number) {
-    // Update position
-    this.x += this.vx * timestamp;
-    this.y += this.vy * timestamp;
+    // Constants for velocity management
+    const maxVelocity = 0.00004; // Strict max velocity
+    const minVelocity = 0.00001; // Min velocity
+    const baseTime = 16; // Base time step (roughly 60fps)
+    
+    // Calculate a normalized time delta to make movement frame-rate independent
+    // This prevents acceleration based on timestamp increases
+    const deltaTime = Math.min(30, timestamp - (this.lastUpdate || timestamp - baseTime)) || baseTime;
+    
+    // Update position with normalized time
+    this.x += this.vx * deltaTime;
+    this.y += this.vy * deltaTime;
     
     // Very slowly rotate
     if (timestamp - this.lastUpdate > 100) { // Less frequent updates
-      this.angle += 0.0005; // Much slower rotation (4x slower)
-      this.lastUpdate = timestamp;
+      this.angle += 0.0005; // Much slower rotation
+      // Only update lastUpdate for rotation, not for position calculation
     }
     
     // Bounce off edges with a little randomness
     if (this.x < -this.size/2 || this.x > canvasWidth + this.size/2) {
       this.vx *= -1;
-      this.vx += (Math.random() * 0.00005 - 0.000025); // Add slight randomness (reduced)
+      // Add smaller randomness and oscillate velocity
+      this.vx += (Math.random() * 0.00002 - 0.00001);
     }
     
     if (this.y < -this.size/2 || this.y > canvasHeight + this.size/2) {
       this.vy *= -1;
-      this.vy += (Math.random() * 0.00005 - 0.000025); // Add slight randomness (reduced)
+      // Add smaller randomness and oscillate velocity
+      this.vy += (Math.random() * 0.00002 - 0.00001);
     }
     
-    // Ensure velocity doesn't get too high or too low
-    const maxVelocity = 0.0002; // Lower max velocity
-    const minVelocity = 0.00002; // Lower min velocity
+    // Add natural deceleration/oscillation effect
+    const oscillationFactor = Math.sin(timestamp * 0.0001) * 0.1;
     
+    // Apply gentle oscillation to velocity (speed up and slow down naturally)
+    this.vx *= (1 + oscillationFactor * 0.01);
+    this.vy *= (1 + oscillationFactor * 0.01);
+    
+    // Strictly enforce velocity limits
     this.vx = Math.max(Math.min(this.vx, maxVelocity), -maxVelocity);
     this.vy = Math.max(Math.min(this.vy, maxVelocity), -maxVelocity);
     
+    // Ensure minimum velocity
     if (Math.abs(this.vx) < minVelocity) {
       this.vx = minVelocity * Math.sign(this.vx || 1);
     }
@@ -145,6 +161,9 @@ class Blob {
     if (Math.abs(this.vy) < minVelocity) {
       this.vy = minVelocity * Math.sign(this.vy || 1);
     }
+    
+    // Update lastUpdate for time delta calculations
+    this.lastUpdate = timestamp;
   }
   
   draw(ctx: CanvasRenderingContext2D) {
