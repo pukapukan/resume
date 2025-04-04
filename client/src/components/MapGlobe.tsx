@@ -19,8 +19,15 @@ interface PopupInfo {
 }
 
 // Main MapGlobe component
-export default function MapGlobe() {
-  const [activeCompany, setActiveCompany] = useState('Stripe');
+interface MapGlobeProps {
+  activeCompany?: string;
+  onCompanyChange?: (company: string) => void;
+}
+
+export default function MapGlobe({ 
+  activeCompany = 'Stripe',
+  onCompanyChange
+}: MapGlobeProps) {
   const { activeSection } = useSectionStore();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -82,7 +89,7 @@ export default function MapGlobe() {
       });
       
       map.on('error', (e) => {
-        console.error('MapBox GL error:', e);
+        console.error('MapBox GL error occurred');
         setTokenError(true);
       });
       
@@ -101,7 +108,7 @@ export default function MapGlobe() {
         mapRef.current = null;
       };
     } catch (error) {
-      console.error('Error initializing MapBox GL:', error);
+      console.error('Error initializing MapBox GL');
       setTokenError(true);
       return () => {};
     }
@@ -116,7 +123,10 @@ export default function MapGlobe() {
     const location = findLocationByCompany(company);
     if (!location) return;
     
-    setActiveCompany(company);
+    // Call the callback for parent component
+    if (onCompanyChange) {
+      onCompanyChange(company);
+    }
     
     // Reset all markers to default state
     Object.keys(markersRef.current).forEach(key => {

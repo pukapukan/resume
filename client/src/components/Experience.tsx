@@ -96,7 +96,10 @@ const Experience = () => {
             <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
               <p>Interactive map loading... (Requires MapBox access token)</p>
             </div>
-            <MapGlobe />
+            <MapGlobe 
+              activeCompany={activeCompany}
+              onCompanyChange={setActiveCompany}
+            />
           </div>
 
           {/* Gates Notes-style quote */}
