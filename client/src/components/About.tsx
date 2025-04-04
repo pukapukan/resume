@@ -62,18 +62,14 @@ const About = () => {
     target: aboutRef
   });
 
-  // Animation states
-  const [showContent, setShowContent] = useState(false);
+  // Animation states - no fade in
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (inView) {
       setActiveSection("about");
-      if (!showContent) {
-        setTimeout(() => setShowContent(true), 200);
-      }
     }
-  }, [inView, setActiveSection, showContent]);
+  }, [inView, setActiveSection]);
 
   const toggleCategory = (categoryName: string) => {
     if (expandedCategory === categoryName) {
@@ -92,9 +88,7 @@ const About = () => {
       <div className="notes-container">
         <SectionHeading title="About Me" number="01" />
 
-        <div className={`mt-16 transition-all duration-700 ease-in-out ${
-          showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
+        <div className="mt-16">
           {/* Gates Notes-style featured intro */}
           <div className="notes-card p-8 md:p-12 mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
