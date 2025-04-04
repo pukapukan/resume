@@ -103,58 +103,60 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "fixed top-0 w-full py-4 z-50 transition-all duration-300",
+        "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled || isMenuOpen || isMobile
-          ? "bg-background/95 backdrop-blur-lg border-b border-border shadow-md" 
-          : "bg-transparent"
+          ? "bg-background/90 backdrop-blur-md border-b border-border/30 py-3 shadow-sm" 
+          : "bg-transparent py-5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         <a 
           href="#hero" 
-          className="text-secondary font-mono text-xl font-bold"
+          className="text-text/90 hover:text-secondary transition-colors duration-300 text-lg font-medium tracking-tight"
           onClick={(e) => handleNavClick(e, "hero")}
         >
-          Jason Park
+          <span className="text-secondary">J</span>ason <span className="text-secondary">P</span>ark
         </a>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
-          <ul className="flex gap-6">
+        {/* Desktop Nav - More minimalistic */}
+        <div className="hidden md:flex items-center gap-4">
+          <ul className="flex gap-5">
             {navLinks.map((link, index) => (
               <li key={link.id}>
                 <button
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "font-mono transition-colors duration-300 px-1",
+                    "text-sm transition-colors duration-300",
                     activeSection === link.id
-                      ? "text-secondary"
-                      : "text-text hover:text-secondary"
+                      ? "text-secondary font-medium"
+                      : "text-text/80 hover:text-text"
                   )}
                 >
-                  <span className="text-secondary">0{index + 1}.</span> {link.title}
+                  {link.title}
                 </button>
               </li>
             ))}
           </ul>
           
+          <div className="h-5 w-[1px] bg-border/40 mx-1"></div>
+          
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-primary/10 text-text hover:bg-primary/20 transition-colors"
+            className="p-1.5 rounded-full text-text/70 hover:text-text transition-colors"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
         </div>
 
         {/* Mobile Nav Toggle */}
-        <div className="md:hidden flex items-center gap-4">
+        <div className="md:hidden flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-primary/30 text-text hover:bg-primary/40 transition-colors"
+            className="p-1.5 text-text/70 hover:text-text transition-colors"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
           
           <button
@@ -163,14 +165,14 @@ const Navbar = () => {
               setIsMenuOpen(prev => !prev);
             }}
             className={cn(
-              "p-2 rounded-full transition-colors",
+              "p-1.5 transition-colors",
               isMenuOpen 
-                ? "bg-secondary/30 text-secondary" 
-                : "bg-primary/30 text-text hover:bg-primary/40"
+                ? "text-secondary" 
+                : "text-text/70 hover:text-text"
             )}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
@@ -178,32 +180,35 @@ const Navbar = () => {
       {/* Mobile Menu - Always in DOM but conditionally displayed */}
       <div 
         className={cn(
-          "md:hidden fixed inset-0 top-[68px] bg-background z-40 flex flex-col items-center justify-start pt-8 overflow-y-auto",
+          "md:hidden fixed inset-0 top-[58px] bg-background z-40 flex flex-col items-center justify-start pt-8 overflow-y-auto",
           isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         )}
         style={{
           transition: "opacity 0.3s ease, visibility 0.3s ease",
-          height: "calc(100vh - 68px)",
-          boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+          height: "calc(100vh - 58px)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
           backgroundColor: "#0A192F", // Hardcoded background color for mobile
-          borderTop: "1px solid rgba(255,255,255,0.1)"
+          borderTop: "1px solid rgba(255,255,255,0.05)"
         }}
       >
-        <div className="w-full max-w-md mx-auto px-6 py-12">
-          <ul className="flex flex-col items-center gap-8">
+        <div className="w-full max-w-md mx-auto px-6 py-8">
+          <ul className="flex flex-col items-center gap-5">
             {navLinks.map((link, index) => (
               <li key={link.id} className="w-full text-center">
                 <button
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "font-mono text-xl transition-colors duration-300 py-5 px-6 w-full rounded-md",
+                    "transition-colors duration-300 py-4 px-6 w-full rounded",
                     activeSection === link.id
-                      ? "bg-secondary/20 text-secondary border border-secondary/30" 
-                      : "bg-[#112240] text-[#E6F1FF] hover:text-secondary hover:bg-[#172A46] border border-[#112240]"
+                      ? "text-secondary" 
+                      : "text-text/80 hover:text-text"
                   )}
                 >
-                  <span className="text-secondary mr-2 font-bold">0{index + 1}.</span> {link.title}
+                  {link.title}
                 </button>
+                {index < navLinks.length - 1 && (
+                  <div className="h-[1px] w-3/4 mx-auto bg-border/20 mt-4" />
+                )}
               </li>
             ))}
           </ul>
