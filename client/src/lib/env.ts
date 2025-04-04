@@ -4,10 +4,9 @@
 declare global {
   interface Window {
     ENV?: {
-      MAPBOX_ACCESS_TOKEN?: string;
+      // Add any environment variables needed here
     };
   }
 }
 
-// Mapbox access token - we'll get this from the server
-export const MAPBOX_ACCESS_TOKEN = window.ENV?.MAPBOX_ACCESS_TOKEN || '';
+// Export environment variables as needed

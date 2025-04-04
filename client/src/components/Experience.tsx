@@ -4,7 +4,6 @@ import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
 import { ChevronRight, Briefcase, Calendar, MapPin } from "lucide-react";
 import PullQuote from "./ui/pull-quote";
-import MapGlobe from "./MapGlobe";
 
 interface ExperienceItem {
   company: string;
@@ -91,15 +90,38 @@ const Experience = () => {
         <div className={`mt-16 transition-all duration-700 ${
           showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          {/* MapBox will go here once we have the token */}
-          <div className="h-[300px] md:h-[500px] bg-card border border-border rounded-lg mb-16 overflow-hidden relative">
-            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-              <p>Interactive map loading... (Requires MapBox access token)</p>
+          {/* Visual experience representation */}
+          <div className="h-[300px] md:h-[400px] bg-card border border-border rounded-lg mb-16 overflow-hidden relative p-8">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-50"></div>
+            <div className="relative h-full flex flex-col items-center justify-center">
+              <h3 className="text-xl font-medium text-text mb-8">Global Experience</h3>
+              
+              <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-6">
+                {experiences.map((exp, index) => (
+                  <div 
+                    key={index}
+                    className={`p-5 rounded-lg transition-all duration-300 cursor-pointer
+                      ${activeCompany === exp.company 
+                        ? 'bg-secondary/10 border border-secondary/20 shadow-lg transform scale-105' 
+                        : 'bg-card/60 border border-border/30 hover:bg-card/80'
+                      }`}
+                    onClick={() => setActiveCompany(exp.company)}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <h4 className="font-medium text-secondary">{exp.company}</h4>
+                      <span className="text-xs bg-primary/20 text-text px-2 py-1 rounded-full">
+                        {exp.location.split(',')[0]}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{exp.position}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <p className="text-sm text-muted-foreground mt-8 max-w-md text-center">
+                I've worked across multiple locations, gaining diverse experience and perspectives on software development.
+              </p>
             </div>
-            <MapGlobe 
-              activeCompany={activeCompany}
-              onCompanyChange={setActiveCompany}
-            />
           </div>
 
           {/* Gates Notes-style quote */}
