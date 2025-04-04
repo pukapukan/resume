@@ -6,17 +6,20 @@ interface InViewOptions {
   rootMargin?: string;
   // If true, will only update active section if user hasn't recently clicked a section
   respectClickState?: boolean;
+  // Optional target element if you're using your own ref
+  target?: HTMLElement | null;
 }
 
 // Named function to help React Fast Refresh
 function useCustomInViewHook(options: InViewOptions = {}) {
   const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLElement | null>(null);
+  const localRef = useRef<HTMLElement | null>(null);
+  // Use either the provided target or our local ref
+  const elementToObserve = options.target || localRef.current;
   const { timeOfLastClick } = useSectionStore();
   
   useEffect(() => {
-    const currentRef = ref.current;
-    if (!currentRef) return;
+    if (!elementToObserve) return;
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -35,16 +38,22 @@ function useCustomInViewHook(options: InViewOptions = {}) {
       }
     );
     
-    observer.observe(currentRef);
+    observer.observe(elementToObserve);
     
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
+      if (elementToObserve) {
+        observer.unobserve(elementToObserve);
       }
     };
-  }, [options.threshold, options.rootMargin, timeOfLastClick, options.respectClickState]);
+  }, [
+    options.threshold, 
+    options.rootMargin, 
+    timeOfLastClick, 
+    options.respectClickState, 
+    elementToObserve
+  ]);
   
-  return { ref, inView };
+  return { ref: localRef, inView };
 }
 
 // Export the hook - keeps consistent naming for imports

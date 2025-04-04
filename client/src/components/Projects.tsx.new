@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
-import { ExternalLink, Github, ChevronRight, BookOpen } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { ExternalLink, Github, ChevronRight, BookOpen, ArrowRight as ArrowRightIcon } from "lucide-react";
 import ProjectArtwork from "./ProjectArtwork";
 import PullQuote from "./ui/pull-quote";
 import SectionDivider from "./ui/section-divider";
@@ -143,7 +142,7 @@ const Projects = () => {
                     className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors group"
                   >
                     Learn more about this project
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRightIcon size={16} className="group-hover:translate-x-1 transition-transform" />
                   </a>
                 </div>
               </div>

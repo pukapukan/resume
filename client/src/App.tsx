@@ -16,6 +16,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { useThemeStore } from "./lib/stores/useThemeStore";
 import { ScrollControls } from "./components/ScrollControls";
+import ReadingProgress from "./components/ui/reading-progress";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +86,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <main className="relative z-0 bg-background">
+        {/* Gates Notes-inspired reading progress indicator */}
+        <ReadingProgress color="#64FFDA" height={2} />
+        
         {isLoading ? (
           <Loader />
         ) : (
