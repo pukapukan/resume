@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
@@ -74,19 +74,17 @@ const Projects = () => {
     }
   }, [inView, setActiveSection]);
 
-  // Use a separate state to track when to show content
+  // Use a separate state to track when to show content with a ref to avoid re-renders
   const [showContent, setShowContent] = useState(false);
+  const contentShown = useRef(false);
   
-  // Show content with a slight delay after section comes into view
+  // Show content immediately when section comes into view, but only once
   useEffect(() => {
-    if (inView && !showContent) {
-      // Small delay to ensure smooth transition
-      const timer = setTimeout(() => {
-        setShowContent(true);
-      }, 100);
-      return () => clearTimeout(timer);
+    if (inView && !contentShown.current) {
+      contentShown.current = true;
+      setShowContent(true);
     }
-  }, [inView, showContent]);
+  }, [inView]);
 
   return (
     <section

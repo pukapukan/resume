@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 
 // Types of pixel art to render
@@ -13,48 +13,63 @@ interface ProjectArtworkProps {
 /**
  * ProjectArtwork - Renders SVG-based pixel art drawings for project cards
  * with a resolution transition effect similar to Gates Notes
+ * Performance optimized to prevent scrolling jank
  */
 const ProjectArtwork = ({ type, className = '', inView }: ProjectArtworkProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [resolution, setResolution] = useState(6); // Start with low resolution (higher number = fewer pixels)
-  const { ref: artworkRef, inView: localInView } = useCustomInView({ threshold: 0.3 });
   
-  // Use either provided inView prop or local tracking
-  const isVisible = inView || localInView;
+  // Use the passed-in inView prop directly
+  // This avoids causing re-renders from our own tracking
+  const isVisible = inView;
   
-  // Increase resolution when component comes into view
+  // Increase resolution when component comes into view - using RAF for smoother animation
   useEffect(() => {
-    if (isVisible) {
-      setResolution(6); // Reset to ensure animation runs properly
+    let rafId: number | null = null;
+    let animationStartTime: number | null = null;
+    const animationDuration = 800; // ms
+    
+    const animateResolution = (timestamp: number) => {
+      if (!animationStartTime) animationStartTime = timestamp;
+      const elapsed = timestamp - animationStartTime;
       
-      const timer = setTimeout(() => {
-        // Animate to higher resolution in steps
-        const interval = setInterval(() => {
-          setResolution(prev => {
-            const newValue = prev - 1;
-            if (newValue <= 1) {
-              clearInterval(interval);
-              return 1; // Full resolution
-            }
-            return newValue;
-          });
-        }, 150); // Speed of resolution increase
+      if (elapsed < animationDuration) {
+        // Calculate progress (0 to 1)
+        const progress = elapsed / animationDuration;
+        // Smoothly transition from 6 to 1 (exponential easing)
+        const newResolution = 6 - (5 * Math.min(1, progress * progress));
+        setResolution(Math.max(1, newResolution));
         
-        return () => clearInterval(interval);
-      }, 100); // Shorter delay before starting animation
-      
-      return () => clearTimeout(timer);
+        // Continue animation
+        rafId = requestAnimationFrame(animateResolution);
+      } else {
+        // Animation complete
+        setResolution(1);
+        rafId = null;
+      }
+    };
+    
+    if (isVisible) {
+      // Use request animation frame for smoother animation
+      rafId = requestAnimationFrame(animateResolution);
     } else {
       // Reset to low resolution when out of view
       setResolution(6);
+      animationStartTime = null;
     }
+    
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [isVisible]);
   
-  // Generate grid pattern based on resolution
-  const gridSize = resolution * 2; // Grid cell size
+  // Generate grid pattern based on resolution - memoized to prevent recalculation
+  const gridSize = useMemo(() => resolution * 2, [resolution]); // Grid cell size
   
-  // Round coordinates to grid
-  const snapToGrid = (value: number) => Math.round(value / gridSize) * gridSize;
+  // Round coordinates to grid - memoized function
+  const snapToGrid = useMemo(() => {
+    return (value: number) => Math.round(value / gridSize) * gridSize;
+  }, [gridSize]);
   
   // Single monotone color for all artwork, matching the Stripe-inspired teal
   const mainColor = '#64FFDA';
@@ -537,18 +552,23 @@ const ProjectArtwork = ({ type, className = '', inView }: ProjectArtworkProps) =
     }
   };
   
+  // Memoize the rendered artwork to prevent unnecessary re-renders
+  const artworkToRender = useMemo(() => renderArtwork(), [
+    type, resolution, snapToGrid, mainColor
+  ]);
+  
   return (
     <div 
-      ref={artworkRef} 
       className={`relative overflow-hidden w-full h-full ${className}`}
     >
       <svg 
         ref={svgRef}
-        className={`w-full h-full ${isVisible ? 'animate-resolution' : ''}`}
+        className="w-full h-full"
         viewBox="0 0 100 100" 
         preserveAspectRatio="xMidYMid meet"
         style={{ 
-          backgroundColor: 'transparent'
+          backgroundColor: 'transparent',
+          willChange: isVisible ? 'transform' : 'auto' // Performance hint for browsers
         }}
       >
         {/* Background grid pattern */}
@@ -558,7 +578,7 @@ const ProjectArtwork = ({ type, className = '', inView }: ProjectArtworkProps) =
           fill="#0A192F" 
         />
         
-        {renderArtwork()}
+        {artworkToRender}
       </svg>
     </div>
   );
