@@ -116,11 +116,11 @@ const Experience = () => {
           <div className="notes-card p-6 md:p-8 mt-10">
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Tab Navigation - Left Side */}
-              <div className="lg:w-1/4 flex lg:flex-col overflow-x-auto lg:overflow-visible border-b lg:border-b-0 lg:border-r border-border">
+              <div className="lg:w-1/4 grid grid-flow-col auto-cols-fr lg:grid-flow-row lg:auto-rows-auto overflow-x-auto scrollbar-hide lg:overflow-visible border-b lg:border-b-0 lg:border-r border-border">
                 {experiences.map((exp, index) => (
                   <button
                     key={index}
-                    className={`px-4 py-3 text-left whitespace-nowrap transition-all flex-shrink-0 lg:flex-shrink lg:w-full
+                    className={`px-3 sm:px-4 py-3 text-left whitespace-nowrap transition-all min-w-[100px] lg:min-w-0 lg:w-full
                       ${activeCompany === exp.company 
                         ? 'border-b-2 lg:border-b-0 lg:border-l-2 border-secondary bg-secondary/5 text-secondary font-medium' 
                         : 'border-b-2 lg:border-b-0 lg:border-l-2 border-transparent hover:bg-primary/5 hover:text-text/90'
@@ -129,7 +129,26 @@ const Experience = () => {
                   >
                     <div className="flex flex-col">
                       <span className="text-base">{exp.company}</span>
-                      <span className="text-xs text-muted-foreground mt-1">{exp.duration.split(' - ')[0]}</span>
+                      <span className="text-xs text-muted-foreground mt-1.5">
+                        {/* Split duration into parts and show start and end dates */}
+                        {(() => {
+                          const parts = exp.duration.split(' - ');
+                          return (
+                            <span className="whitespace-nowrap">
+                              {parts[0]} 
+                              {parts.length > 1 && (
+                                <span className="hidden sm:inline"> - {parts[1]}</span>
+                              )}
+                              {parts.length > 1 && (
+                                <span className="sm:hidden">
+                                  <span className="inline-block text-secondary/60 mx-1">→</span>
+                                  <span className="text-secondary">{parts[1]}</span>
+                                </span>
+                              )}
+                            </span>
+                          );
+                        })()}
+                      </span>
                     </div>
                   </button>
                 ))}
@@ -186,27 +205,6 @@ const Experience = () => {
                         </div>
                       </div>
                     )}
-                    
-                    {/* Location card - integrated within each experience */}
-                    <div className="mt-4 pt-4 border-t border-primary/10">
-                      <div className="rounded-lg bg-primary/5 p-4 mt-2">
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-full bg-secondary/10 text-secondary">
-                            <MapPin size={16} />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-text">{exp.location}</h4>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {exp.company === "Stripe" && "Working remotely with Stripe's global payment systems team."}
-                              {exp.company === "Amazon" && "Worked across Seattle and London offices on retail technology."}
-                              {exp.company === "Freelance" && "Developed solutions for clients throughout Asia and Europe."}
-                              {exp.company === "LateRooms.com" && "Tech hub for hotel booking platform in Southeast Asia."}
-                              {exp.company === "Avanade" && "Microsoft's consulting arm working with government entities."}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               ))}
