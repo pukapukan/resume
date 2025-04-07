@@ -116,11 +116,11 @@ const Experience = () => {
           <div className="notes-card p-6 md:p-8 mt-10">
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Tab Navigation - Left Side */}
-              <div className="lg:w-1/4 grid grid-flow-col auto-cols-fr lg:grid-flow-row lg:auto-rows-auto overflow-x-auto scrollbar-hide lg:overflow-visible border-b lg:border-b-0 lg:border-r border-border">
+              <div className="lg:w-1/4 flex flex-nowrap lg:flex-col overflow-x-auto scrollbar-hide lg:overflow-visible border-b lg:border-b-0 lg:border-r border-border gap-px">
                 {experiences.map((exp, index) => (
                   <button
                     key={index}
-                    className={`px-3 sm:px-4 py-3 text-left whitespace-nowrap transition-all min-w-[100px] lg:min-w-0 lg:w-full
+                    className={`px-2 sm:px-4 py-3 text-left transition-all min-w-[90px] w-[90px] sm:w-auto lg:min-w-0 lg:w-full
                       ${activeCompany === exp.company 
                         ? 'border-b-2 lg:border-b-0 lg:border-l-2 border-secondary bg-secondary/5 text-secondary font-medium' 
                         : 'border-b-2 lg:border-b-0 lg:border-l-2 border-transparent hover:bg-primary/5 hover:text-text/90'
@@ -128,24 +128,33 @@ const Experience = () => {
                     onClick={() => setActiveCompany(exp.company)}
                   >
                     <div className="flex flex-col">
-                      <span className="text-base">{exp.company}</span>
-                      <span className="text-xs text-muted-foreground mt-1.5">
-                        {/* Split duration into parts and show start and end dates */}
+                      <span className="text-sm sm:text-base truncate">{exp.company}</span>
+                      <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                        {/* Split duration into parts and show only year on mobile */}
                         {(() => {
                           const parts = exp.duration.split(' - ');
+                          const startYear = parts[0].split(' ').pop(); // Get just the year
+                          const endYear = parts.length > 1 ? parts[1].split(' ').pop() : ''; // Get just the year
+                          
                           return (
-                            <span className="whitespace-nowrap">
-                              {parts[0]} 
-                              {parts.length > 1 && (
-                                <span className="hidden sm:inline"> - {parts[1]}</span>
-                              )}
-                              {parts.length > 1 && (
-                                <span className="sm:hidden">
-                                  <span className="inline-block text-secondary/60 mx-1">→</span>
-                                  <span className="text-secondary">{parts[1]}</span>
-                                </span>
-                              )}
-                            </span>
+                            <>
+                              {/* Mobile view - just years */}
+                              <span className="block sm:hidden whitespace-nowrap">
+                                {startYear} 
+                                {endYear && (
+                                  <>
+                                    <span className="inline-block text-secondary/60 mx-0.5">→</span>
+                                    <span className="text-secondary">{endYear === 'Present' ? 'Now' : endYear}</span>
+                                  </>
+                                )}
+                              </span>
+                              
+                              {/* Desktop view - full dates */}
+                              <span className="hidden sm:block whitespace-nowrap">
+                                {parts[0]}
+                                {parts.length > 1 && <span> - {parts[1]}</span>}
+                              </span>
+                            </>
                           );
                         })()}
                       </span>
