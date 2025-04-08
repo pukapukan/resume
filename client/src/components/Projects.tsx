@@ -95,12 +95,12 @@ const Projects = () => {
       <div className="notes-container">
         <SectionHeading title="Some Things I've Built" number="03" />
 
-        {/* Gates Notes-inspired featured project layout */}
-        <div className={`mt-16 ${showContent ? 'animate-fadeIn' : 'opacity-0'}`}>
-          {/* Highlight first project as featured */}
-          <div className="notes-card mb-24 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-              <div className="h-[300px] md:h-[400px] lg:h-full relative pixel-art-container lg:rounded-none">
+        {/* Streamlined project layout */}
+        <div className={`mt-10 ${showContent ? 'animate-fadeIn' : 'opacity-0'}`}>
+          {/* Ultra-compact featured project */}
+          <div className="notes-card mb-12 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-1/4 lg:w-1/5 h-[140px] md:h-auto relative">
                 <ProjectArtwork 
                   type={projects[0].artworkType}
                   inView={showContent}
@@ -108,120 +108,128 @@ const Projects = () => {
                 />
               </div>
               
-              <div className="p-8 md:p-12 space-y-6 bg-card/70 backdrop-blur-sm">
-                <div className="flex items-center gap-2 font-mono text-secondary text-sm mb-4">
-                  <span className="bg-secondary/10 px-3 py-1 rounded-full text-secondary">
-                    {projects[0].company}
-                  </span>
-                  <span>Featured Project</span>
+              <div className="p-4 md:p-5 flex-1 space-y-3 bg-card/70 backdrop-blur-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block bg-secondary/10 px-2 py-0.5 rounded-full text-xs font-mono text-secondary">
+                      {projects[0].company}
+                    </span>
+                    <span className="text-xs text-secondary/80 font-medium">Featured Project</span>
+                  </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-bold text-text tracking-tight">
+                <h2 className="text-lg md:text-xl font-bold text-text tracking-tight">
                   {projects[0].title}
                 </h2>
                 
-                <p className="text-muted-foreground notes-drop-cap">
+                <p className="text-muted-foreground text-xs md:text-sm line-clamp-3 md:line-clamp-none">
                   {projects[0].description}
                 </p>
                 
-                <ul className="flex flex-wrap gap-2 my-6">
-                  {projects[0].stack.map((tech, i) => (
-                    <li
-                      key={i}
-                      className="font-mono text-sm text-text bg-secondary/10 px-3 py-1 rounded-full"
-                    >
-                      {tech}
-                    </li>
-                  ))}
-                </ul>
-                
-                <div className="pt-4">
+                <div className="flex items-center justify-between">
+                  <ul className="flex flex-wrap gap-1.5">
+                    {projects[0].stack.slice(0, 5).map((tech, i) => (
+                      <li
+                        key={i}
+                        className="font-mono text-[10px] md:text-xs text-text bg-secondary/10 px-1.5 py-0.5 rounded-full"
+                      >
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
+                  
                   <a
                     href="#"
-                    className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors group"
+                    className="inline-flex items-center gap-1 text-secondary hover:text-secondary/80 transition-colors group text-xs whitespace-nowrap"
                   >
-                    Learn more about this project
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    View details
+                    <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                   </a>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Gates Notes-style quote between content sections */}
-          <PullQuote 
-            quote="The most pressing challenges in technology require creative thinking and innovative approaches. These projects represent my commitment to developing solutions that drive real business impact."
-            align="center"
-          />
+          {/* Simplified quote between content sections */}
+          <div className="mt-8 mb-8 text-center px-4 md:px-12 lg:px-24">
+            <p className="text-muted-foreground text-sm italic">
+              "These projects represent my approach to solving complex challenges and delivering impactful solutions."
+            </p>
+          </div>
           
-          <SectionDivider variant="gradient" />
+          <SectionDivider variant="gradient" className="mt-2 mb-6" />
           
-          {/* Remaining projects in Gates Notes grid style */}
-          <div className="notes-article-list mt-16 mb-24">
+          {/* Highly compact project cards in responsive grid */}
+          <div className="mt-12 mb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects.slice(1).map((project, index) => (
-              <div key={index} className="notes-card flex flex-col h-full">
-                <div className="h-[240px] pixel-art-container rounded-t-lg rounded-b-none relative">
-                  <ProjectArtwork 
-                    type={project.artworkType}
-                    inView={showContent}
-                    className="w-full h-full z-10"
-                  />
-                  
-                  <div className="absolute top-4 left-4 z-20 bg-secondary/10 px-3 py-1 rounded-full">
-                    <span className="font-mono text-xs text-secondary">{project.company}</span>
+              <div key={index} className="notes-card flex flex-col h-full overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-stretch h-full">
+                  {/* Image on the left */}
+                  <div className="w-24 min-w-[5rem] relative">
+                    <ProjectArtwork 
+                      type={project.artworkType}
+                      inView={showContent}
+                      className="w-full h-full z-10"
+                    />
                   </div>
-                </div>
-                
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-text mb-3">{project.title}</h3>
                   
-                  <p className="text-muted-foreground text-sm mb-4 flex-grow">
-                    {project.description.length > 180 
-                      ? `${project.description.substring(0, 180)}...` 
-                      : project.description}
-                  </p>
-                  
-                  <div className="flex justify-between items-center pt-4 mt-auto">
-                    <ul className="flex flex-wrap gap-1">
-                      {project.stack.slice(0, 3).map((tech, i) => (
-                        <li
-                          key={i}
-                          className="font-mono text-xs text-secondary"
-                        >
-                          {tech}{i < Math.min(project.stack.length, 3) - 1 ? ' • ' : ''}
-                        </li>
-                      ))}
-                    </ul>
+                  {/* Content on the right */}
+                  <div className="flex-1 p-3 md:p-4 flex flex-col">
+                    <div className="mb-1.5 flex items-center justify-between">
+                      <span className="inline-block bg-secondary/10 px-2 py-0.5 rounded-full text-[10px] font-mono text-secondary">
+                        {project.company}
+                      </span>
+                      
+                      <div className="flex gap-1.5">
+                        {project.links.github && (
+                          <a
+                            href={project.links.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-text hover:text-secondary transition-colors"
+                            aria-label="GitHub Repository"
+                          >
+                            <Github size={12} />
+                          </a>
+                        )}
+                        {project.links.live && (
+                          <a
+                            href={project.links.live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-text hover:text-secondary transition-colors"
+                            aria-label="Live Demo"
+                          >
+                            <ExternalLink size={12} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                     
-                    <div className="flex gap-2">
-                      {project.links.github && (
-                        <a
-                          href={project.links.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-text hover:text-secondary transition-colors"
-                          aria-label="GitHub Repository"
-                        >
-                          <Github size={18} />
-                        </a>
-                      )}
-                      {project.links.live && (
-                        <a
-                          href={project.links.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-text hover:text-secondary transition-colors"
-                          aria-label="Live Demo"
-                        >
-                          <ExternalLink size={18} />
-                        </a>
-                      )}
+                    <h3 className="text-sm font-bold text-text leading-tight mb-1.5">{project.title}</h3>
+                    
+                    <p className="text-muted-foreground text-xs mb-2 flex-grow line-clamp-2">
+                      {project.description}
+                    </p>
+                    
+                    <div className="mt-auto">
+                      <ul className="flex flex-wrap gap-1 mb-1.5">
+                        {project.stack.slice(0, 3).map((tech, i) => (
+                          <li
+                            key={i}
+                            className="font-mono text-[10px] text-secondary"
+                          >
+                            {tech}{i < Math.min(project.stack.length, 3) - 1 ? ' • ' : ''}
+                          </li>
+                        ))}
+                      </ul>
+                      
                       <a
                         href="#"
-                        className="text-text hover:text-secondary transition-colors"
-                        aria-label="Read More"
+                        className="text-[10px] inline-flex items-center gap-1 text-secondary hover:text-secondary/80 transition-colors group"
                       >
-                        <BookOpen size={18} />
+                        View details
+                        <ArrowRight size={8} className="group-hover:translate-x-0.5 transition-transform" />
                       </a>
                     </div>
                   </div>
