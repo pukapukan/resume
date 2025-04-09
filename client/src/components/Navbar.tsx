@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn, scrollToSection } from "../lib/utils";
 import { useThemeStore } from "../lib/stores/useThemeStore";
 import { useSectionStore } from "../lib/stores/useSectionStore";
@@ -21,6 +21,10 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [animProgress, setAnimProgress] = useState(0); // 0 to 1 animation progress
+  const [heroNameRect, setHeroNameRect] = useState<DOMRect | null>(null);
+  const [navbarHeight, setNavbarHeight] = useState(0);
+  const navRef = useRef<HTMLElement>(null);
   const { theme, toggleTheme } = useThemeStore();
   const { activeSection, setActiveSection } = useSectionStore();
 
@@ -43,17 +47,111 @@ const Navbar = () => {
     console.log("Mobile menu state:", isMenuOpen ? "open" : "closed");
   }, [isMenuOpen]);
 
+  // Store the initial position of the hero name and navbar height
+  useEffect(() => {
+    const heroName = document.getElementById('hero-name');
+    if (heroName) {
+      setHeroNameRect(heroName.getBoundingClientRect());
+    }
+    
+    if (navRef.current) {
+      setNavbarHeight(navRef.current.offsetHeight);
+    }
+    
+    // Update measurements on resize
+    const handleResize = () => {
+      if (heroName) {
+        setHeroNameRect(heroName.getBoundingClientRect());
+      }
+      if (navRef.current) {
+        setNavbarHeight(navRef.current.offsetHeight);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Additional states for animation
+  const [heroFontSize, setHeroFontSize] = useState<string>("inherit");
+  const [namePosition, setNamePosition] = useState<{x: number, y: number}>({ x: 0, y: 0 });
+  const [targetPosition, setTargetPosition] = useState<{x: number, y: number}>({ x: 0, y: 0 });
+  
+  // Handle scroll effects and animations
   useEffect(() => {
     const handleScroll = () => {
-      // Check if we've scrolled past the hero section
-      const aboutSection = document.getElementById('about');
-      if (aboutSection) {
-        const aboutSectionTop = aboutSection.getBoundingClientRect().top;
-        // Show navbar when about section is at or above the top of the viewport
-        setIsScrolled(aboutSectionTop <= 0 || window.scrollY > window.innerHeight * 0.8);
+      // Get the hero name element and navbar name element
+      const heroName = document.getElementById('hero-name');
+      const navbarNameContainer = document.querySelector('nav a[href="#hero"]') as HTMLElement;
+      
+      if (heroName && navbarNameContainer && heroNameRect) {
+        // Get current positions
+        const heroRect = heroName.getBoundingClientRect();
+        const navRect = navbarNameContainer.getBoundingClientRect();
+        
+        // First time - save the hero font size
+        if (heroFontSize === "inherit") {
+          const heroStyle = window.getComputedStyle(heroName);
+          setHeroFontSize(heroStyle.fontSize);
+        }
+        
+        // Calculate origin and target positions
+        const origin = {
+          x: heroRect.left + (heroRect.width / 2),
+          y: heroRect.top + (heroRect.height / 2) 
+        };
+        
+        const target = {
+          x: navRect.left + (navRect.width / 2),
+          y: navRect.top + (navRect.height / 2)
+        };
+        
+        // Save target position for animation
+        setTargetPosition(target);
+        
+        // Set animation threshold
+        const scrollThreshold = window.innerHeight * 0.3; // Start animation earlier
+        
+        // Calculate animation progress (0 to 1)
+        let progress = 0;
+        if (heroRect.top < scrollThreshold) {
+          // Calculate how far we've scrolled past the threshold
+          const scrollDist = scrollThreshold - heroRect.top;
+          const maxDist = scrollThreshold + (heroRect.height); // Complete over a longer distance
+          progress = Math.min(1, scrollDist / maxDist);
+        }
+        
+        // Update animation progress
+        setAnimProgress(progress);
+        
+        // Interpolate position for smooth animation
+        const position = {
+          x: origin.x + (target.x - origin.x) * progress,
+          y: origin.y + (target.y - origin.y) * progress
+        };
+        
+        // Update position for animation
+        setNamePosition(position);
+        
+        // Check if we've scrolled past the hero section
+        const aboutSection = document.getElementById('about');
+        if (aboutSection) {
+          const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+          // Show navbar when about section is near the top of the viewport
+          setIsScrolled(aboutSectionTop <= navbarHeight * 2 || progress > 0.8);
+        } else {
+          // Fallback to basic scroll distance if section not found
+          setIsScrolled(progress > 0.8);
+        }
       } else {
-        // Fallback to basic scroll distance if section not found
-        setIsScrolled(window.scrollY > window.innerHeight * 0.8);
+        // Fallback if elements not found
+        const aboutSection = document.getElementById('about');
+        if (aboutSection) {
+          const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+          setIsScrolled(aboutSectionTop <= 0 || window.scrollY > window.innerHeight * 0.8);
+        } else {
+          setIsScrolled(window.scrollY > window.innerHeight * 0.8);
+        }
       }
     };
 
@@ -61,7 +159,7 @@ const Navbar = () => {
     // Run once on mount to set initial state
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [heroNameRect, navbarHeight, heroFontSize]);
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
@@ -113,6 +211,7 @@ const Navbar = () => {
 
   return (
     <nav
+      ref={navRef}
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-500",
         isScrolled || isMenuOpen
@@ -123,17 +222,45 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+        {/* Animated name that morphs from hero to navbar */}
         <a 
           href="#hero" 
           className={cn(
-            "transition-colors duration-300 text-lg font-medium tracking-tight",
+            "transition-all duration-300 font-medium tracking-tight overflow-hidden relative whitespace-nowrap",
             isScrolled || !isMobile
-              ? "text-text/90 hover:text-secondary opacity-100"
-              : "opacity-0" // Hide on mobile when not scrolled
+              ? "opacity-100"
+              : isMobile && animProgress > 0 
+                ? "opacity-100" 
+                : "opacity-0" // Hide when not scrolled and no animation
           )}
+          style={{
+            // Dynamic font size based on animation progress
+            fontSize: isMobile
+              ? `${Math.max(0.9, 1.5 - animProgress * 0.6)}rem` // Shrink from larger to smaller
+              : "1rem",
+            // Scale and transform as we scroll
+            transform: isMobile && heroNameRect 
+              ? `
+                scale(${1 - (animProgress * 0.2)})
+                translateY(${Math.max(0, (1 - animProgress) * -20)}px)
+              ` 
+              : "none"
+          }}
           onClick={(e) => handleNavClick(e, "hero")}
         >
-          <span className="text-secondary">J</span>ason <span className="text-secondary">P</span>ark
+          <span className="transition-all duration-500" style={{
+            // Optionally change colors during transition
+            color: animProgress > 0.5 ? 'var(--color-secondary)' : 'var(--color-secondary)'
+          }}>J</span>
+          <span className="transition-all duration-500" style={{
+            color: animProgress > 0.5 ? 'var(--color-text)' : 'var(--color-text)'
+          }}>ason </span>
+          <span className="transition-all duration-500" style={{
+            color: animProgress > 0.5 ? 'var(--color-secondary)' : 'var(--color-secondary)'
+          }}>P</span>
+          <span className="transition-all duration-500" style={{
+            color: animProgress > 0.5 ? 'var(--color-text)' : 'var(--color-text)'
+          }}>ark</span>
         </a>
 
         {/* Desktop Nav - More minimalistic */}

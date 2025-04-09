@@ -156,8 +156,8 @@ const HeroAbout = () => {
             </span>
           </div>
           
-          <h1 className="hero-heading text-4xl sm:text-5xl md:text-7xl font-bold text-text mb-3 md:mb-4">
-            Jason Park.
+          <h1 id="hero-name" className="hero-heading text-4xl sm:text-5xl md:text-7xl font-bold text-text mb-3 md:mb-4">
+            <span className="text-secondary">J</span>ason <span className="text-secondary">P</span>ark.
           </h1>
           
           <div className="relative h-[60px] sm:h-[70px] md:h-[100px]">
