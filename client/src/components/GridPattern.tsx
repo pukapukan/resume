@@ -11,8 +11,8 @@ const GridPattern: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useThemeStore(state => state.theme);
   
-  // Use subtle parallax for grid - slower movement creates depth effect
-  const gridParallax = useParallax(0.15);
+  // Use extremely subtle parallax for grid - almost imperceptible movement
+  const gridParallax = useParallax(0.01, 'vertical', 90);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -81,18 +81,18 @@ const GridPattern: React.FC = () => {
       // Calculate offset for parallax effect
       const yOffset = parallaxOffset % size; // Keep offset within grid size
       
-      // Draw vertical lines - with subtle x parallax effect
+      // Draw vertical lines - with extremely subtle x parallax effect
       for (let x = 0; x <= canvas.width; x += size) {
-        // Add slight horizontal shift based on grid position
-        const xPos = x + (Math.sin(x * 0.01) * parallaxOffset * 0.05);
+        // Add tiny horizontal shift based on grid position (reduced by 10x)
+        const xPos = x + (Math.sin(x * 0.01) * parallaxOffset * 0.002);
         ctx.moveTo(xPos, 0);
         ctx.lineTo(xPos, canvas.height);
       }
       
-      // Draw horizontal lines - with y parallax effect
+      // Draw horizontal lines - with subtle y parallax effect
       for (let y = -size; y <= canvas.height + size; y += size) {
-        // Apply direct y-parallax
-        const yPos = (y + yOffset) % (canvas.height + size * 2);
+        // Apply very subtle y-parallax (reduced by 5x)
+        const yPos = (y + (yOffset * 0.2)) % (canvas.height + size * 2);
         ctx.moveTo(0, yPos);
         ctx.lineTo(canvas.width, yPos);
       }
@@ -108,10 +108,10 @@ const GridPattern: React.FC = () => {
       color: string,
       parallaxOffset: number
     ) => {
-      // Vertical pulse line - add subtle parallax effect
+      // Vertical pulse line - with extremely subtle parallax effect
       let x = (Math.floor(offset / size) * size) % (window.innerWidth + size);
-      // Add a subtle horizontal shift based on parallax
-      x += (parallaxOffset * 0.1) % size;
+      // Add a tiny horizontal shift based on parallax (reduced by 20x)
+      x += (parallaxOffset * 0.005) % size;
       
       const gradient = ctx.createLinearGradient(x - 10, 0, x + 10, 0);
       gradient.addColorStop(0, 'transparent');
@@ -125,10 +125,10 @@ const GridPattern: React.FC = () => {
       ctx.lineTo(x, canvas.height);
       ctx.stroke();
       
-      // Horizontal pulse line - with more pronounced parallax effect
+      // Horizontal pulse line - with very subtle parallax effect
       let y = (Math.floor((offset + size * 0.5) / size) * size) % (window.innerHeight + size);
-      // Adjust vertical position with parallax
-      y = (y + parallaxOffset * 0.2) % (window.innerHeight + size);
+      // Adjust vertical position with minimal parallax (reduced by 20x)
+      y = (y + parallaxOffset * 0.01) % (window.innerHeight + size);
       
       const gradient2 = ctx.createLinearGradient(0, y - 10, 0, y + 10);
       gradient2.addColorStop(0, 'transparent');

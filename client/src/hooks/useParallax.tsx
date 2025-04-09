@@ -5,9 +5,14 @@ import { useState, useEffect } from 'react';
  * 
  * @param speed The parallax speed multiplier (positive values move slower than scroll, negative values move faster)
  * @param direction 'vertical' or 'horizontal'
+ * @param damping Factor to reduce overall parallax sensitivity (higher = less movement)
  * @returns Current parallax offset value
  */
-export function useParallax(speed: number = 0.5, direction: 'vertical' | 'horizontal' = 'vertical') {
+export function useParallax(
+  speed: number = 0.05, // Default reduced by 10x
+  direction: 'vertical' | 'horizontal' = 'vertical',
+  damping: number = 20 // High damping factor to make movement more subtle
+) {
   // Store the parallax offset
   const [offset, setOffset] = useState(0);
 
@@ -18,10 +23,11 @@ export function useParallax(speed: number = 0.5, direction: 'vertical' | 'horizo
         ? window.scrollY 
         : window.scrollX;
       
-      // Calculate new offset value
-      // For positive speed: content moves slower than scroll (divide by speed)
+      // Calculate new offset value with damping
+      // The damping factor significantly reduces the movement intensity
+      // For positive speed: content moves slower than scroll
       // For negative speed: content moves in opposite direction of scroll
-      const newOffset = scrollPosition * speed;
+      const newOffset = (scrollPosition * speed) / damping;
       
       // Update state with new offset
       setOffset(newOffset);
@@ -35,7 +41,7 @@ export function useParallax(speed: number = 0.5, direction: 'vertical' | 'horizo
     
     // Clean up event listener on unmount
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [speed, direction]);
+  }, [speed, direction, damping]);
 
   return offset;
 }

@@ -14,10 +14,10 @@ const FloatingDots: React.FC = () => {
   const mouseRef = useRef({ x: 0, y: 0 });
   const scrollYRef = useRef(0);
   
-  // Use different parallax speeds for different layers of dots
-  const parallaxForeground = useParallax(0.5); // Foreground dots (move faster)
-  const parallaxMiddle = useParallax(0.3); // Middle layer
-  const parallaxBackground = useParallax(0.1); // Background dots (move slower)
+  // Use extremely subtle parallax speeds for different layers of dots
+  const parallaxForeground = useParallax(0.03, 'vertical', 60); // Foreground dots (move slightly faster)
+  const parallaxMiddle = useParallax(0.02, 'vertical', 70); // Middle layer (very subtle)
+  const parallaxBackground = useParallax(0.01, 'vertical', 80); // Background dots (barely move)
   
   // Dot layer assignments - keep track of which dot belongs to which layer
   const [dotLayers, setDotLayers] = useState<{[id: number]: 'foreground' | 'middle' | 'background'}>({});
@@ -215,10 +215,11 @@ class Dot {
     // Apply tiny base movement
     this.x += this.vx;
     
-    // Apply parallax effect based on layer
-    // Note: we're using the separate parallaxOffset parameter now instead of
-    // a hardcoded multiplier
-    this.y = this.origY - parallaxOffset;
+    // Apply extremely subtle parallax effect based on layer
+    // Using a tiny fraction of the calculated parallax offset
+    // and applying a damping factor to make movement minimal
+    const dampingFactor = 0.2; // Reduce effect by 80%
+    this.y = this.origY - (parallaxOffset * dampingFactor);
     
     // Adjust base y position with base movement
     this.origY += this.vy;

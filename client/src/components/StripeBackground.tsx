@@ -12,10 +12,10 @@ const StripeBackground: React.FC = () => {
   const theme = useThemeStore(state => state.theme);
   const scrollRef = useRef(0);
   
-  // Get parallax offset for different layers
-  const parallaxSlow = useParallax(0.2); // Slow-moving background layer
-  const parallaxMedium = useParallax(0.4); // Medium-speed middle layer
-  const parallaxFast = useParallax(-0.1); // Fast, reverse-direction layer
+  // Get parallax offset for different layers - using extremely subtle values
+  const parallaxSlow = useParallax(0.02, 'vertical', 40); // Very slow background layer
+  const parallaxMedium = useParallax(0.04, 'vertical', 50); // Subtle middle layer
+  const parallaxFast = useParallax(-0.01, 'vertical', 60); // Barely perceptible reverse-direction layer
   
   // Store blobs in a ref to maintain state between renders
   const blobsRef = useRef<Blob[]>([]);
