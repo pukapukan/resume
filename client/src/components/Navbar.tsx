@@ -72,56 +72,18 @@ const Navbar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Additional states for the flying name animation
-  const [nameRect, setNameRect] = useState<DOMRect | null>(null);
-  const [heroFontSize, setHeroFontSize] = useState<number>(0);
-  const [navbarFontSize, setNavbarFontSize] = useState<number>(0);
-  const [flyingName, setFlyingName] = useState<HTMLElement | null>(null);
-  const [flyingNameVisible, setFlyingNameVisible] = useState(false);
-  
-  // Create the flying name element once on mount
-  useEffect(() => {
-    // Create a flying name element to animate between hero and navbar
-    if (!flyingName) {
-      const nameEl = document.createElement('div');
-      nameEl.classList.add('fixed', 'pointer-events-none', 'font-bold', 'transition-all', 'duration-300', 'z-[60]');
-      nameEl.innerHTML = '<span class="text-secondary">J</span>ason <span class="text-secondary">P</span>ark';
-      nameEl.style.opacity = '0';
-      document.body.appendChild(nameEl);
-      setFlyingName(nameEl);
-    }
-    
-    return () => {
-      // Clean up on unmount
-      if (flyingName) {
-        document.body.removeChild(flyingName);
-      }
-    };
-  }, []);
+  // Simple animation progress state
   
   // Handle scroll effects and animations
   useEffect(() => {
     const handleScroll = () => {
-      // Get the hero name element and navbar name element
+      // Get the hero name element
       const heroName = document.getElementById('hero-name');
-      const navbarNameEl = document.querySelector('nav a[href="#hero"]') as HTMLElement;
       
-      if (heroName && navbarNameEl && flyingName) {
-        // Get current positions and dimensions
-        const heroRect = heroName.getBoundingClientRect();
-        const navRect = navbarNameEl.getBoundingClientRect();
-        
-        // Measure sizes if not already done
-        if (heroFontSize === 0) {
-          const heroStyle = window.getComputedStyle(heroName);
-          setHeroFontSize(parseFloat(heroStyle.fontSize));
-          
-          const navStyle = window.getComputedStyle(navbarNameEl);
-          setNavbarFontSize(parseFloat(navStyle.fontSize));
-        }
-        
+      if (heroName && heroNameRect) {
         // Calculate animation progress based on hero element position
-        const scrollThreshold = window.innerHeight * 0.4;
+        const scrollThreshold = window.innerHeight * 0.5;
+        const heroRect = heroName.getBoundingClientRect();
         
         // Calculate animation progress (0 to 1)
         let progress = 0;
@@ -134,40 +96,6 @@ const Navbar = () => {
         
         // Set animation progress for other components
         setAnimProgress(progress);
-        
-        // Only show flying name during transition
-        if (progress > 0 && progress < 1) {
-          // Calculate intermediate position
-          const x = heroRect.left + (navRect.left - heroRect.left) * progress;
-          const y = heroRect.top + (navRect.top - heroRect.top) * progress;
-          
-          // Calculate intermediate size
-          const fontSize = heroFontSize + (navbarFontSize - heroFontSize) * progress;
-          
-          // Apply to flying element
-          flyingName.style.left = `${x}px`;
-          flyingName.style.top = `${y}px`;
-          flyingName.style.fontSize = `${fontSize}px`;
-          flyingName.style.opacity = '1';
-          
-          // Make sure hero title and navbar title are hidden during transition
-          heroName.style.opacity = `${1 - progress}`;
-          navbarNameEl.style.opacity = '0';
-          
-          setFlyingNameVisible(true);
-        } else if (progress >= 1) {
-          // We've completed the animation, hide flying element, show navbar
-          flyingName.style.opacity = '0';
-          heroName.style.opacity = '0';
-          navbarNameEl.style.opacity = '1';
-          setFlyingNameVisible(false);
-        } else {
-          // We're at the top, reset everything
-          flyingName.style.opacity = '0';
-          heroName.style.opacity = '1';
-          navbarNameEl.style.opacity = '0';
-          setFlyingNameVisible(false);
-        }
         
         // Check if we've scrolled past the hero section to show navbar
         const aboutSection = document.getElementById('about');
@@ -195,7 +123,7 @@ const Navbar = () => {
     // Run once on mount to set initial state
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [heroNameRect, navbarHeight, heroFontSize, flyingName]);
+  }, [heroNameRect, navbarHeight]);
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
@@ -262,41 +190,12 @@ const Navbar = () => {
         <a 
           href="#hero" 
           className={cn(
-            "transition-all duration-300 font-medium tracking-tight overflow-hidden relative whitespace-nowrap",
-            isScrolled || !isMobile
-              ? "opacity-100"
-              : isMobile && animProgress > 0 
-                ? "opacity-100" 
-                : "opacity-0" // Hide when not scrolled and no animation
+            "transition-all duration-300 font-medium tracking-tight text-base whitespace-nowrap",
+            isScrolled ? "opacity-100" : "opacity-0" // Simple fade in/out with navbar
           )}
-          style={{
-            // Dynamic font size based on animation progress
-            fontSize: isMobile
-              ? `${Math.max(0.9, 1.5 - animProgress * 0.6)}rem` // Shrink from larger to smaller
-              : "1rem",
-            // Scale and transform as we scroll
-            transform: isMobile && heroNameRect 
-              ? `
-                scale(${1 - (animProgress * 0.2)})
-                translateY(${Math.max(0, (1 - animProgress) * -20)}px)
-              ` 
-              : "none"
-          }}
           onClick={(e) => handleNavClick(e, "hero")}
         >
-          <span className="transition-all duration-500" style={{
-            // Optionally change colors during transition
-            color: animProgress > 0.5 ? 'var(--color-secondary)' : 'var(--color-secondary)'
-          }}>J</span>
-          <span className="transition-all duration-500" style={{
-            color: animProgress > 0.5 ? 'var(--color-text)' : 'var(--color-text)'
-          }}>ason </span>
-          <span className="transition-all duration-500" style={{
-            color: animProgress > 0.5 ? 'var(--color-secondary)' : 'var(--color-secondary)'
-          }}>P</span>
-          <span className="transition-all duration-500" style={{
-            color: animProgress > 0.5 ? 'var(--color-text)' : 'var(--color-text)'
-          }}>ark</span>
+          <span className="text-secondary">J</span>ason <span className="text-secondary">P</span>ark
         </a>
 
         {/* Desktop Nav - More minimalistic */}
