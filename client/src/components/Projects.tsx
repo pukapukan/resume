@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import SectionHeading from "./ui/section-heading";
-import { ExternalLink, Github, ChevronRight, BookOpen } from "lucide-react";
+import { ExternalLink, ChevronRight, BookOpen } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import ProjectArtwork from "./ProjectArtwork";
 import PullQuote from "./ui/pull-quote";
@@ -53,7 +53,6 @@ const projects: Project[] = [
     company: "Personal Project",
     stack: ["Node.js", "React", "GraphQL", "Redis", "AWS"],
     links: {
-      github: "https://github.com",
       live: "https://example.com"
     }
   }
@@ -138,17 +137,6 @@ const Projects = () => {
                 </div>
                 
                 <div className="flex gap-2 mt-3">
-                  {projects[0].links.github && (
-                    <a
-                      href={projects[0].links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-text hover:text-secondary transition-colors flex items-center gap-1 text-xs"
-                      aria-label="GitHub Repository"
-                    >
-                      <Github size={12} /> Source
-                    </a>
-                  )}
                   {projects[0].links.live && (
                     <a
                       href={projects[0].links.live}
@@ -196,17 +184,6 @@ const Projects = () => {
                       </span>
                       
                       <div className="flex gap-1.5">
-                        {project.links.github && (
-                          <a
-                            href={project.links.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-text hover:text-secondary transition-colors"
-                            aria-label="GitHub Repository"
-                          >
-                            <Github size={12} />
-                          </a>
-                        )}
                         {project.links.live && (
                           <a
                             href={project.links.live}
@@ -249,9 +226,9 @@ const Projects = () => {
         {/* Gates Notes-style call to action */}
         <CallToAction 
           title="Interested in more of my work?"
-          description="Check out my GitHub profile for additional projects and contributions to open source."
-          primaryButtonText="View GitHub Profile"
-          primaryButtonLink="https://github.com"
+          description="Feel free to reach out to learn more about my experience and qualifications."
+          primaryButtonText="Get In Touch"
+          primaryButtonLink="#contact"
           variant="highlight"
         />
       </div>

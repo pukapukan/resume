@@ -3,7 +3,7 @@ import { useCustomInView } from "../hooks/useCustomInView";
 import { useSectionStore } from "../lib/stores/useSectionStore";
 import { scrollToSection } from "../lib/utils";
 import SectionHeading from "./ui/section-heading";
-import { Mail, Linkedin, Github } from "lucide-react";
+import { Mail, Linkedin } from "lucide-react";
 
 const Contact = () => {
   const { setActiveSection } = useSectionStore();
@@ -57,7 +57,7 @@ const Contact = () => {
       className="relative py-24 px-6 min-h-[80vh] flex items-center scroll-mt-24"
     >
       <div className="max-w-3xl mx-auto w-full">
-        <SectionHeading title="Get In Touch" number="04" center />
+        <SectionHeading title="Get In Touch" number="04" align="center" />
 
         <div className={`mt-12 text-center ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
           <p className="text-text text-lg mb-8">
@@ -74,22 +74,13 @@ const Contact = () => {
               <Mail size={24} />
             </a>
             <a
-              href="https://linkedin.com/in/jasonhjpark"
+              href="https://www.linkedin.com/in/jasonhyunjoonpark"
               target="_blank"
               rel="noopener noreferrer"
               className="text-text hover:text-secondary transition-colors p-2"
               aria-label="LinkedIn"
             >
               <Linkedin size={24} />
-            </a>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-text hover:text-secondary transition-colors p-2"
-              aria-label="GitHub"
-            >
-              <Github size={24} />
             </a>
           </div>
 
