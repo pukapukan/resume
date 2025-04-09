@@ -118,14 +118,19 @@ const Navbar = () => {
         isScrolled || isMenuOpen
           ? "opacity-100 translate-y-0 bg-background/90 backdrop-blur-md border-b border-border/30 py-3 shadow-sm" 
           : isMobile
-            ? "opacity-100 translate-y-0 bg-transparent py-5"
+            ? "opacity-100 translate-y-0 bg-transparent py-5" // Keep nav visible on mobile but name will be hidden
             : "opacity-0 -translate-y-full"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         <a 
           href="#hero" 
-          className="text-text/90 hover:text-secondary transition-colors duration-300 text-lg font-medium tracking-tight"
+          className={cn(
+            "transition-colors duration-300 text-lg font-medium tracking-tight",
+            isScrolled || !isMobile
+              ? "text-text/90 hover:text-secondary opacity-100"
+              : "opacity-0" // Hide on mobile when not scrolled
+          )}
           onClick={(e) => handleNavClick(e, "hero")}
         >
           <span className="text-secondary">J</span>ason <span className="text-secondary">P</span>ark
@@ -162,11 +167,11 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Nav Toggle */}
+        {/* Mobile Nav Toggle - Always visible */}
         <div className="md:hidden flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="p-1.5 text-text/70 hover:text-text transition-colors"
+            className="p-1.5 text-text/70 hover:text-text transition-colors opacity-100"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
@@ -178,7 +183,7 @@ const Navbar = () => {
               setIsMenuOpen(prev => !prev);
             }}
             className={cn(
-              "p-1.5 transition-colors",
+              "p-1.5 transition-colors opacity-100",
               isMenuOpen 
                 ? "text-secondary" 
                 : "text-text/70 hover:text-text"

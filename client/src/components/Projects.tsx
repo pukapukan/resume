@@ -122,29 +122,44 @@ const Projects = () => {
                   {projects[0].title}
                 </h2>
                 
-                <p className="text-muted-foreground text-xs md:text-sm line-clamp-3 md:line-clamp-none">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   {projects[0].description}
                 </p>
                 
-                <div className="flex items-center justify-between">
-                  <ul className="flex flex-wrap gap-1.5">
-                    {projects[0].stack.slice(0, 5).map((tech, i) => (
-                      <li
-                        key={i}
-                        className="font-mono text-[10px] md:text-xs text-text bg-secondary/10 px-1.5 py-0.5 rounded-full"
-                      >
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-1 text-secondary hover:text-secondary/80 transition-colors group text-xs whitespace-nowrap"
-                  >
-                    View details
-                    <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
-                  </a>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {projects[0].stack.map((tech, i) => (
+                    <li
+                      key={i}
+                      className="font-mono text-[10px] md:text-xs text-text bg-secondary/10 px-1.5 py-0.5 rounded-full list-none"
+                    >
+                      {tech}
+                    </li>
+                  ))}
+                </div>
+                
+                <div className="flex gap-2 mt-3">
+                  {projects[0].links.github && (
+                    <a
+                      href={projects[0].links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text hover:text-secondary transition-colors flex items-center gap-1 text-xs"
+                      aria-label="GitHub Repository"
+                    >
+                      <Github size={12} /> Source
+                    </a>
+                  )}
+                  {projects[0].links.live && (
+                    <a
+                      href={projects[0].links.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text hover:text-secondary transition-colors flex items-center gap-1 text-xs"
+                      aria-label="Live Demo"
+                    >
+                      <ExternalLink size={12} /> Live demo
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -208,29 +223,21 @@ const Projects = () => {
                     
                     <h3 className="text-sm font-bold text-text leading-tight mb-1.5">{project.title}</h3>
                     
-                    <p className="text-muted-foreground text-xs mb-2 flex-grow line-clamp-2">
+                    <p className="text-muted-foreground text-xs mb-2 flex-grow">
                       {project.description}
                     </p>
                     
                     <div className="mt-auto">
-                      <ul className="flex flex-wrap gap-1 mb-1.5">
-                        {project.stack.slice(0, 3).map((tech, i) => (
-                          <li
+                      <div className="flex flex-wrap gap-1 mb-1.5">
+                        {project.stack.map((tech, i) => (
+                          <span
                             key={i}
                             className="font-mono text-[10px] text-secondary"
                           >
-                            {tech}{i < Math.min(project.stack.length, 3) - 1 ? ' • ' : ''}
-                          </li>
+                            {tech}{i < project.stack.length - 1 ? ' • ' : ''}
+                          </span>
                         ))}
-                      </ul>
-                      
-                      <a
-                        href="#"
-                        className="text-[10px] inline-flex items-center gap-1 text-secondary hover:text-secondary/80 transition-colors group"
-                      >
-                        View details
-                        <ArrowRight size={8} className="group-hover:translate-x-0.5 transition-transform" />
-                      </a>
+                      </div>
                     </div>
                   </div>
                 </div>
