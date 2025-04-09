@@ -42,7 +42,7 @@ const ReadingProgress = ({
 
   return (
     <div 
-      className="fixed top-0 left-0 z-50 h-1" 
+      className="fixed top-0 left-0 z-[100] h-1" 
       style={{ 
         height: `${height}px`,
         width: `${width}%`,

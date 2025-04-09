@@ -72,75 +72,111 @@ const Navbar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Additional states for animation
-  const [heroFontSize, setHeroFontSize] = useState<string>("inherit");
-  const [namePosition, setNamePosition] = useState<{x: number, y: number}>({ x: 0, y: 0 });
-  const [targetPosition, setTargetPosition] = useState<{x: number, y: number}>({ x: 0, y: 0 });
+  // Additional states for the flying name animation
+  const [nameRect, setNameRect] = useState<DOMRect | null>(null);
+  const [heroFontSize, setHeroFontSize] = useState<number>(0);
+  const [navbarFontSize, setNavbarFontSize] = useState<number>(0);
+  const [flyingName, setFlyingName] = useState<HTMLElement | null>(null);
+  const [flyingNameVisible, setFlyingNameVisible] = useState(false);
+  
+  // Create the flying name element once on mount
+  useEffect(() => {
+    // Create a flying name element to animate between hero and navbar
+    if (!flyingName) {
+      const nameEl = document.createElement('div');
+      nameEl.classList.add('fixed', 'pointer-events-none', 'font-bold', 'transition-all', 'duration-300', 'z-[60]');
+      nameEl.innerHTML = '<span class="text-secondary">J</span>ason <span class="text-secondary">P</span>ark';
+      nameEl.style.opacity = '0';
+      document.body.appendChild(nameEl);
+      setFlyingName(nameEl);
+    }
+    
+    return () => {
+      // Clean up on unmount
+      if (flyingName) {
+        document.body.removeChild(flyingName);
+      }
+    };
+  }, []);
   
   // Handle scroll effects and animations
   useEffect(() => {
     const handleScroll = () => {
       // Get the hero name element and navbar name element
       const heroName = document.getElementById('hero-name');
-      const navbarNameContainer = document.querySelector('nav a[href="#hero"]') as HTMLElement;
+      const navbarNameEl = document.querySelector('nav a[href="#hero"]') as HTMLElement;
       
-      if (heroName && navbarNameContainer && heroNameRect) {
-        // Get current positions
+      if (heroName && navbarNameEl && flyingName) {
+        // Get current positions and dimensions
         const heroRect = heroName.getBoundingClientRect();
-        const navRect = navbarNameContainer.getBoundingClientRect();
+        const navRect = navbarNameEl.getBoundingClientRect();
         
-        // First time - save the hero font size
-        if (heroFontSize === "inherit") {
+        // Measure sizes if not already done
+        if (heroFontSize === 0) {
           const heroStyle = window.getComputedStyle(heroName);
-          setHeroFontSize(heroStyle.fontSize);
+          setHeroFontSize(parseFloat(heroStyle.fontSize));
+          
+          const navStyle = window.getComputedStyle(navbarNameEl);
+          setNavbarFontSize(parseFloat(navStyle.fontSize));
         }
         
-        // Calculate origin and target positions
-        const origin = {
-          x: heroRect.left + (heroRect.width / 2),
-          y: heroRect.top + (heroRect.height / 2) 
-        };
-        
-        const target = {
-          x: navRect.left + (navRect.width / 2),
-          y: navRect.top + (navRect.height / 2)
-        };
-        
-        // Save target position for animation
-        setTargetPosition(target);
-        
-        // Set animation threshold
-        const scrollThreshold = window.innerHeight * 0.3; // Start animation earlier
+        // Calculate animation progress based on hero element position
+        const scrollThreshold = window.innerHeight * 0.4;
         
         // Calculate animation progress (0 to 1)
         let progress = 0;
         if (heroRect.top < scrollThreshold) {
-          // Calculate how far we've scrolled past the threshold
+          // Calculate how far we've scrolled past threshold
           const scrollDist = scrollThreshold - heroRect.top;
-          const maxDist = scrollThreshold + (heroRect.height); // Complete over a longer distance
+          const maxDist = scrollThreshold + 100; // Complete animation over 100px of scroll
           progress = Math.min(1, scrollDist / maxDist);
         }
         
-        // Update animation progress
+        // Set animation progress for other components
         setAnimProgress(progress);
         
-        // Interpolate position for smooth animation
-        const position = {
-          x: origin.x + (target.x - origin.x) * progress,
-          y: origin.y + (target.y - origin.y) * progress
-        };
+        // Only show flying name during transition
+        if (progress > 0 && progress < 1) {
+          // Calculate intermediate position
+          const x = heroRect.left + (navRect.left - heroRect.left) * progress;
+          const y = heroRect.top + (navRect.top - heroRect.top) * progress;
+          
+          // Calculate intermediate size
+          const fontSize = heroFontSize + (navbarFontSize - heroFontSize) * progress;
+          
+          // Apply to flying element
+          flyingName.style.left = `${x}px`;
+          flyingName.style.top = `${y}px`;
+          flyingName.style.fontSize = `${fontSize}px`;
+          flyingName.style.opacity = '1';
+          
+          // Make sure hero title and navbar title are hidden during transition
+          heroName.style.opacity = `${1 - progress}`;
+          navbarNameEl.style.opacity = '0';
+          
+          setFlyingNameVisible(true);
+        } else if (progress >= 1) {
+          // We've completed the animation, hide flying element, show navbar
+          flyingName.style.opacity = '0';
+          heroName.style.opacity = '0';
+          navbarNameEl.style.opacity = '1';
+          setFlyingNameVisible(false);
+        } else {
+          // We're at the top, reset everything
+          flyingName.style.opacity = '0';
+          heroName.style.opacity = '1';
+          navbarNameEl.style.opacity = '0';
+          setFlyingNameVisible(false);
+        }
         
-        // Update position for animation
-        setNamePosition(position);
-        
-        // Check if we've scrolled past the hero section
+        // Check if we've scrolled past the hero section to show navbar
         const aboutSection = document.getElementById('about');
         if (aboutSection) {
           const aboutSectionTop = aboutSection.getBoundingClientRect().top;
           // Show navbar when about section is near the top of the viewport
           setIsScrolled(aboutSectionTop <= navbarHeight * 2 || progress > 0.8);
         } else {
-          // Fallback to basic scroll distance if section not found
+          // Fallback to basic scroll detection
           setIsScrolled(progress > 0.8);
         }
       } else {
@@ -159,7 +195,7 @@ const Navbar = () => {
     // Run once on mount to set initial state
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [heroNameRect, navbarHeight, heroFontSize]);
+  }, [heroNameRect, navbarHeight, heroFontSize, flyingName]);
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault(); // Prevent default hash navigation
