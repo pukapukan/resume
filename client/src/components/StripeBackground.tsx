@@ -47,8 +47,8 @@ const StripeBackground: React.FC = () => {
           Math.random() * canvas.height,
           Math.random() * 300 + 200, // size between 200-500
           colors[i % colors.length],
-          Math.random() * 0.0001 - 0.00005, // x velocity (5x slower)
-          Math.random() * 0.0001 - 0.00005  // y velocity (5x slower)
+          Math.random() * 0.0003 - 0.00015, // increased x velocity for more noticeable animation
+          Math.random() * 0.0003 - 0.00015  // increased y velocity for more noticeable animation
         ));
       }
     };
@@ -111,8 +111,8 @@ class Blob {
   
   update(timestamp: number, canvasWidth: number, canvasHeight: number) {
     // Constants for velocity management
-    const maxVelocity = 0.00004; // Strict max velocity
-    const minVelocity = 0.00001; // Min velocity
+    const maxVelocity = 0.0002; // Increased max velocity for more visible movement
+    const minVelocity = 0.00005; // Increased min velocity for more visible movement
     const baseTime = 16; // Base time step (roughly 60fps)
     
     // Calculate a normalized time delta to make movement frame-rate independent
@@ -123,9 +123,9 @@ class Blob {
     this.x += this.vx * deltaTime;
     this.y += this.vy * deltaTime;
     
-    // Very slowly rotate
+    // Rotate at a moderate pace
     if (timestamp - this.lastUpdate > 100) { // Less frequent updates
-      this.angle += 0.0005; // Much slower rotation
+      this.angle += 0.001; // Increased rotation speed for more visible movement
       // Only update lastUpdate for rotation, not for position calculation
     }
     
@@ -143,11 +143,11 @@ class Blob {
     }
     
     // Add natural deceleration/oscillation effect
-    const oscillationFactor = Math.sin(timestamp * 0.0001) * 0.1;
+    const oscillationFactor = Math.sin(timestamp * 0.0002) * 0.2; // Increased oscillation
     
-    // Apply gentle oscillation to velocity (speed up and slow down naturally)
-    this.vx *= (1 + oscillationFactor * 0.01);
-    this.vy *= (1 + oscillationFactor * 0.01);
+    // Apply stronger oscillation to velocity (speed up and slow down more noticeably)
+    this.vx *= (1 + oscillationFactor * 0.02);
+    this.vy *= (1 + oscillationFactor * 0.02);
     
     // Strictly enforce velocity limits
     this.vx = Math.max(Math.min(this.vx, maxVelocity), -maxVelocity);
