@@ -7,7 +7,6 @@ import PullQuote from "./ui/pull-quote";
 
 interface ExperienceItem {
   company: string;
-  logoSrc?: string;
   location: string;
   position: string;
   duration: string;
@@ -18,20 +17,17 @@ interface ExperienceItem {
 const experiences: ExperienceItem[] = [
   {
     company: "Anduril Industries",
-    logoSrc: "/images/companies/anduril.svg",
     location: "Costa Mesa, CA",
     position: "Senior Software Engineer",
     duration: "Apr 2025 - Present",
     description: [
       "Recently joined Anduril's engineering team to work on mission-critical defense technology systems.",
-      "Contributing to advanced software infrastructure for autonomous systems and defense platforms.",
       "More details to be updated as projects progress."
     ],
     techs: "More details coming soon"
   },
   {
     company: "Stripe",
-    logoSrc: "/images/companies/stripe.svg",
     location: "Remote (Irvine, CA)",
     position: "Senior Fullstack Software Engineer",
     duration: "Jun 2022 - Jan 2025",
@@ -46,7 +42,6 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Amazon",
-    logoSrc: "/images/companies/amazon.svg",
     location: "Seattle/London",
     position: "Senior Software Engineer",
     duration: "Nov 2016 - Jun 2022",
@@ -60,7 +55,6 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Freelance",
-    logoSrc: "/images/companies/freelance.svg",
     location: "Seoul, South Korea",
     position: "Full Stack Developer",
     duration: "Mar 2015 - Oct 2016",
@@ -73,7 +67,6 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "LateRooms.com",
-    logoSrc: "/images/companies/laterooms.svg",
     location: "Singapore",
     position: "Full Stack Developer",
     duration: "Aug 2014 - Feb 2015",
@@ -85,7 +78,6 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Avanade",
-    logoSrc: "/images/companies/avanade.svg",
     location: "Singapore",
     position: "IT Consultant",
     duration: "May 2012 - Aug 2014",
@@ -147,18 +139,7 @@ const Experience = () => {
                     onClick={() => setActiveCompany(exp.company)}
                   >
                     <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        {exp.logoSrc && (
-                          <div className="w-5 h-5 flex-shrink-0">
-                            <img 
-                              src={exp.logoSrc} 
-                              alt={`${exp.company} logo`} 
-                              className="w-full h-full object-contain"
-                            />
-                          </div>
-                        )}
-                        <span className="text-sm sm:text-base truncate">{exp.company}</span>
-                      </div>
+                      <span className="text-sm sm:text-base truncate">{exp.company}</span>
                       <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                         {/* Split duration into parts and show only year on mobile */}
                         {(() => {
@@ -202,31 +183,20 @@ const Experience = () => {
                   }`}
                 >
                   <div className="flex flex-col space-y-4">
-                    <div className="flex items-start gap-4">
-                      {exp.logoSrc && (
-                        <div className="w-12 h-12 flex-shrink-0 mt-1">
-                          <img 
-                            src={exp.logoSrc} 
-                            alt={`${exp.company} logo`} 
-                            className="w-full h-full object-contain"
-                          />
+                    <div>
+                      <h3 className="text-xl font-bold text-text">
+                        {exp.position} <span className="text-secondary">@ {exp.company}</span>
+                      </h3>
+                      
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground mt-1 text-sm">
+                        <div className="flex items-center gap-1">
+                          <Calendar size={14} />
+                          <span>{exp.duration}</span>
                         </div>
-                      )}
-                      <div>
-                        <h3 className="text-xl font-bold text-text">
-                          {exp.position} <span className="text-secondary">@ {exp.company}</span>
-                        </h3>
                         
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground mt-1 text-sm">
-                          <div className="flex items-center gap-1">
-                            <Calendar size={14} />
-                            <span>{exp.duration}</span>
-                          </div>
-                          
-                          <div className="flex items-center gap-1">
-                            <MapPin size={14} />
-                            <span>{exp.location}</span>
-                          </div>
+                        <div className="flex items-center gap-1">
+                          <MapPin size={14} />
+                          <span>{exp.location}</span>
                         </div>
                       </div>
                     </div>
