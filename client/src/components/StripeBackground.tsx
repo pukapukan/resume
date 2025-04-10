@@ -35,8 +35,8 @@ const StripeBackground: React.FC = () => {
       
       // Colors for light and dark themes
       const colors = theme === 'dark' 
-        ? ['rgba(100, 255, 218, 0.15)', 'rgba(255, 183, 77, 0.15)', 'rgba(30, 64, 175, 0.15)']
-        : ['rgba(64, 175, 255, 0.15)', 'rgba(255, 183, 77, 0.15)', 'rgba(100, 255, 218, 0.15)'];
+        ? ['rgba(100, 255, 218, 0.18)', 'rgba(255, 183, 77, 0.18)', 'rgba(30, 64, 175, 0.18)']
+        : ['rgba(64, 175, 255, 0.18)', 'rgba(255, 183, 77, 0.18)', 'rgba(100, 255, 218, 0.18)'];
       
       // Create between 3-5 blobs
       const numBlobs = Math.floor(Math.random() * 3) + 3;
@@ -82,7 +82,7 @@ const StripeBackground: React.FC = () => {
     <canvas 
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.7 }}
+      style={{ opacity: 0.8 }}
     />
   );
 };

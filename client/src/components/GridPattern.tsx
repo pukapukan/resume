@@ -41,12 +41,12 @@ const GridPattern: React.FC = () => {
       
       // Colors based on theme
       const lineColor = theme === 'dark' 
-        ? 'rgba(100, 255, 218, 0.08)' 
-        : 'rgba(30, 64, 175, 0.08)';
+        ? 'rgba(100, 255, 218, 0.1)' 
+        : 'rgba(30, 64, 175, 0.1)';
       
       const highlightColor = theme === 'dark'
-        ? 'rgba(255, 183, 77, 0.15)'
-        : 'rgba(100, 255, 218, 0.15)';
+        ? 'rgba(255, 183, 77, 0.18)'
+        : 'rgba(100, 255, 218, 0.18)';
       
       // Draw the grid
       drawGrid(ctx, gridSize, lineColor, lineWidth);
@@ -141,7 +141,7 @@ const GridPattern: React.FC = () => {
     <canvas 
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.4 }}
+      style={{ opacity: 0.5 }}
     />
   );
 };

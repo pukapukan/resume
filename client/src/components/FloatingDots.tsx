@@ -49,8 +49,8 @@ const FloatingDots: React.FC = () => {
           Math.random() * canvas.height,
           Math.random() * 2 + 1,
           theme === 'dark' ? 
-            `rgba(${100 + Math.random() * 155}, ${200 + Math.random() * 55}, ${200 + Math.random() * 55}, ${0.1 + Math.random() * 0.4})` : 
-            `rgba(${10 + Math.random() * 40}, ${50 + Math.random() * 100}, ${100 + Math.random() * 175}, ${0.1 + Math.random() * 0.4})`
+            `rgba(${100 + Math.random() * 155}, ${200 + Math.random() * 55}, ${200 + Math.random() * 55}, ${0.15 + Math.random() * 0.45})` : 
+            `rgba(${10 + Math.random() * 40}, ${50 + Math.random() * 100}, ${100 + Math.random() * 175}, ${0.15 + Math.random() * 0.45})`
         ));
       }
     };
@@ -90,8 +90,8 @@ const FloatingDots: React.FC = () => {
     
     dotsRef.current.forEach(dot => {
       dot.color = theme === 'dark' ? 
-        `rgba(${100 + Math.random() * 155}, ${200 + Math.random() * 55}, ${200 + Math.random() * 55}, ${0.1 + Math.random() * 0.4})` : 
-        `rgba(${10 + Math.random() * 40}, ${50 + Math.random() * 100}, ${100 + Math.random() * 175}, ${0.1 + Math.random() * 0.4})`;
+        `rgba(${100 + Math.random() * 155}, ${200 + Math.random() * 55}, ${200 + Math.random() * 55}, ${0.15 + Math.random() * 0.45})` : 
+        `rgba(${10 + Math.random() * 40}, ${50 + Math.random() * 100}, ${100 + Math.random() * 175}, ${0.15 + Math.random() * 0.45})`;
     });
   }, [theme]);
   
@@ -99,7 +99,7 @@ const FloatingDots: React.FC = () => {
     <canvas 
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.7 }}
     />
   );
 };
