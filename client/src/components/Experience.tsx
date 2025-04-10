@@ -46,6 +46,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Amazon",
+    logoSrc: "/images/companies/amazon.svg",
     location: "Seattle/London",
     position: "Senior Software Engineer",
     duration: "Nov 2016 - Jun 2022",
@@ -59,6 +60,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Freelance",
+    logoSrc: "/images/companies/freelance.svg",
     location: "Seoul, South Korea",
     position: "Full Stack Developer",
     duration: "Mar 2015 - Oct 2016",
@@ -71,6 +73,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "LateRooms.com",
+    logoSrc: "/images/companies/laterooms.svg",
     location: "Singapore",
     position: "Full Stack Developer",
     duration: "Aug 2014 - Feb 2015",
@@ -82,6 +85,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     company: "Avanade",
+    logoSrc: "/images/companies/avanade.svg",
     location: "Singapore",
     position: "IT Consultant",
     duration: "May 2012 - Aug 2014",
@@ -103,7 +107,7 @@ const Experience = () => {
   });
 
   // Animation states
-  const [activeCompany, setActiveCompany] = useState("Stripe");
+  const [activeCompany, setActiveCompany] = useState("Anduril Industries");
 
   useEffect(() => {
     if (inView) {
@@ -143,7 +147,18 @@ const Experience = () => {
                     onClick={() => setActiveCompany(exp.company)}
                   >
                     <div className="flex flex-col">
-                      <span className="text-sm sm:text-base truncate">{exp.company}</span>
+                      <div className="flex items-center gap-2">
+                        {exp.logoSrc && (
+                          <div className="w-5 h-5 flex-shrink-0">
+                            <img 
+                              src={exp.logoSrc} 
+                              alt={`${exp.company} logo`} 
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                        )}
+                        <span className="text-sm sm:text-base truncate">{exp.company}</span>
+                      </div>
                       <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                         {/* Split duration into parts and show only year on mobile */}
                         {(() => {
@@ -187,20 +202,31 @@ const Experience = () => {
                   }`}
                 >
                   <div className="flex flex-col space-y-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-text">
-                        {exp.position} <span className="text-secondary">@ {exp.company}</span>
-                      </h3>
-                      
-                      <div className="flex items-center gap-4 text-muted-foreground mt-1 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Calendar size={14} />
-                          <span>{exp.duration}</span>
+                    <div className="flex items-start gap-4">
+                      {exp.logoSrc && (
+                        <div className="w-12 h-12 flex-shrink-0 mt-1">
+                          <img 
+                            src={exp.logoSrc} 
+                            alt={`${exp.company} logo`} 
+                            className="w-full h-full object-contain"
+                          />
                         </div>
+                      )}
+                      <div>
+                        <h3 className="text-xl font-bold text-text">
+                          {exp.position} <span className="text-secondary">@ {exp.company}</span>
+                        </h3>
                         
-                        <div className="flex items-center gap-1">
-                          <MapPin size={14} />
-                          <span>{exp.location}</span>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground mt-1 text-sm">
+                          <div className="flex items-center gap-1">
+                            <Calendar size={14} />
+                            <span>{exp.duration}</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-1">
+                            <MapPin size={14} />
+                            <span>{exp.location}</span>
+                          </div>
                         </div>
                       </div>
                     </div>

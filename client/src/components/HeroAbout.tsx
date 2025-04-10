@@ -169,7 +169,7 @@ const HeroAbout = () => {
           <p
             className={`max-w-xl text-muted-foreground text-base sm:text-lg mt-4 sm:mt-6 mb-6 sm:mb-8 transition-opacity duration-500 ${contentVisible ? 'opacity-100' : 'opacity-0'}`}
           >
-            Senior Fullstack Engineer with 15 years of experience at Stripe, Amazon, and startups. 
+            Senior Software Engineer at Anduril Industries with 15+ years of experience at companies like Stripe and Amazon. 
             Building high-performance systems that deliver exceptional results.
           </p>
           
@@ -206,6 +206,7 @@ const HeroAbout = () => {
                 <p className="text-text">
                   With over 15 years in the tech industry, I've had the privilege of leading 
                   and scaling distributed systems at renowned companies like 
+                  <span className="text-secondary font-medium"> Anduril Industries</span>,
                   <span className="text-secondary font-medium"> Stripe</span> and
                   <span className="text-secondary font-medium"> Amazon</span>, as well as innovative startups.
                 </p>
@@ -222,6 +223,10 @@ const HeroAbout = () => {
                 <div>
                   <h3 className="text-xl font-bold text-text mb-2">Career Highlights</h3>
                   <ul className="space-y-3">
+                    <li className="flex gap-2">
+                      <span className="text-secondary text-xl leading-tight">⬢</span>
+                      <span className="text-text">Currently developing advanced systems at Anduril Industries</span>
+                    </li>
                     <li className="flex gap-2">
                       <span className="text-secondary text-xl leading-tight">⬢</span>
                       <span className="text-text">Led engineering teams at Stripe & Amazon</span>
