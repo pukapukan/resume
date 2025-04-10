@@ -7,6 +7,7 @@ import PullQuote from "./ui/pull-quote";
 
 interface ExperienceItem {
   company: string;
+  logoSrc?: string;
   location: string;
   position: string;
   duration: string;
@@ -16,10 +17,24 @@ interface ExperienceItem {
 
 const experiences: ExperienceItem[] = [
   {
+    company: "Anduril Industries",
+    logoSrc: "/images/companies/anduril.svg",
+    location: "Costa Mesa, CA",
+    position: "Senior Software Engineer",
+    duration: "Apr 2025 - Present",
+    description: [
+      "Recently joined Anduril's engineering team to work on mission-critical defense technology systems.",
+      "Contributing to advanced software infrastructure for autonomous systems and defense platforms.",
+      "More details to be updated as projects progress."
+    ],
+    techs: "More details coming soon"
+  },
+  {
     company: "Stripe",
+    logoSrc: "/images/companies/stripe.svg",
     location: "Remote (Irvine, CA)",
     position: "Senior Fullstack Software Engineer",
-    duration: "Jun 2022 - Present",
+    duration: "Jun 2022 - Jan 2025",
     description: [
       "Tech Lead for a project that scaled Stripe's fraud protection system, expanding supported payment methods by 50x.",
       "Led from ideation to technical design and development, launching alpha/beta screening $10MM+ in transactions daily with 30%+ fraud rate reduction.",

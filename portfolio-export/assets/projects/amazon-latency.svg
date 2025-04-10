@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#232F3E" />
+      <stop offset="100%" stop-color="#131A22" />
+    </linearGradient>
+    
+    <!-- Amazon orange accent color -->
+    <linearGradient id="amazon-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF9900" />
+      <stop offset="100%" stop-color="#FFC107" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg-gradient)" />
+  
+  <!-- Performance metrics grid -->
+  <g stroke="#37475A" stroke-width="1">
+    <line x1="100" y1="100" x2="100" y2="500" />
+    <line x1="100" y1="500" x2="700" y2="500" />
+    
+    <line x1="100" y1="150" x2="700" y2="150" stroke-dasharray="4,4" />
+    <line x1="100" y1="250" x2="700" y2="250" stroke-dasharray="4,4" />
+    <line x1="100" y1="350" x2="700" y2="350" stroke-dasharray="4,4" />
+    <line x1="100" y1="450" x2="700" y2="450" stroke-dasharray="4,4" />
+    
+    <line x1="200" y1="100" x2="200" y2="500" stroke-dasharray="4,4" />
+    <line x1="300" y1="100" x2="300" y2="500" stroke-dasharray="4,4" />
+    <line x1="400" y1="100" x2="400" y2="500" stroke-dasharray="4,4" />
+    <line x1="500" y1="100" x2="500" y2="500" stroke-dasharray="4,4" />
+    <line x1="600" y1="100" x2="600" y2="500" stroke-dasharray="4,4" />
+    <line x1="700" y1="100" x2="700" y2="500" stroke-dasharray="4,4" />
+  </g>
+  
+  <!-- Performance metrics labels -->
+  <text x="80" y="150" font-family="Arial" font-size="12" fill="#FFFFFF">1000ms</text>
+  <text x="80" y="250" font-family="Arial" font-size="12" fill="#FFFFFF">750ms</text>
+  <text x="80" y="350" font-family="Arial" font-size="12" fill="#FFFFFF">500ms</text>
+  <text x="80" y="450" font-family="Arial" font-size="12" fill="#FFFFFF">250ms</text>
+  <text x="80" y="500" font-family="Arial" font-size="12" fill="#FFFFFF">0ms</text>
+  
+  <text x="200" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q1</text>
+  <text x="300" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q2</text>
+  <text x="400" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q3</text>
+  <text x="500" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q4</text>
+  <text x="600" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q1</text>
+  <text x="700" y="520" font-family="Arial" font-size="12" fill="#FFFFFF">Q2</text>
+  
+  <!-- Performance graph title -->
+  <text x="400" y="80" font-family="Arial" font-size="24" fill="#FFFFFF" text-anchor="middle">Website Latency Optimization</text>
+  
+  <!-- "Before" Latency line -->
+  <path d="M100,200 L200,250 L300,180 L400,230 L500,220 L600,240 L700,210" stroke="#E67C73" stroke-width="4" fill="none" />
+  
+  <!-- "After" Latency line -->
+  <path d="M100,350 L200,390 L300,410 L400,430 L500,460 L600,470 L700,480" stroke="url(#amazon-orange)" stroke-width="4" fill="none" />
+  
+  <!-- Data points "Before" -->
+  <circle cx="100" cy="200" r="6" fill="#E67C73" />
+  <circle cx="200" cy="250" r="6" fill="#E67C73" />
+  <circle cx="300" cy="180" r="6" fill="#E67C73" />
+  <circle cx="400" cy="230" r="6" fill="#E67C73" />
+  <circle cx="500" cy="220" r="6" fill="#E67C73" />
+  <circle cx="600" cy="240" r="6" fill="#E67C73" />
+  <circle cx="700" cy="210" r="6" fill="#E67C73" />
+  
+  <!-- Data points "After" -->
+  <circle cx="100" cy="350" r="6" fill="#FF9900" />
+  <circle cx="200" cy="390" r="6" fill="#FF9900" />
+  <circle cx="300" cy="410" r="6" fill="#FF9900" />
+  <circle cx="400" cy="430" r="6" fill="#FF9900" />
+  <circle cx="500" cy="460" r="6" fill="#FF9900" />
+  <circle cx="600" cy="470" r="6" fill="#FF9900" />
+  <circle cx="700" cy="480" r="6" fill="#FF9900" />
+  
+  <!-- Legend -->
+  <rect x="550" y="120" width="16" height="16" fill="#E67C73" />
+  <text x="575" y="132" font-family="Arial" font-size="14" fill="#FFFFFF">Before</text>
+  
+  <rect x="550" y="150" width="16" height="16" fill="#FF9900" />
+  <text x="575" y="162" font-family="Arial" font-size="14" fill="#FFFFFF">After</text>
+  
+  <!-- Revenue Impact -->
+  <rect x="120" y="100" width="200" height="40" rx="5" fill="#37475A" />
+  <text x="220" y="125" font-family="Arial" font-size="16" fill="#FFFFFF" text-anchor="middle">+$30MM Annual Revenue</text>
+  
+  <!-- Amazon logo suggestion -->
+  <path d="M720,60 C710,55 695,60 695,70 C695,80 710,85 720,80 L720,85 C705,93 685,90 685,70 C685,50 705,47 720,55 Z" fill="#FF9900" />
+  <path d="M725,55 L735,65 L725,75 L725,55 Z" fill="#FF9900" />
+</svg>
