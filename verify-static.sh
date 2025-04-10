@@ -1,11 +1,9 @@
 #!/bin/bash
 echo "Verifying your static portfolio site..."
 
-# Check if the build exists
-if [ ! -d "dist/public" ]; then
-  echo "Static build not found. Building first..."
-  ./build-static.sh
-fi
+# Always rebuild to ensure latest changes
+echo "Rebuilding static assets to ensure latest changes..."
+./build-static.sh
 
 # Verify important files exist
 echo "Checking for critical files..."

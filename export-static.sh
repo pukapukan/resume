@@ -1,13 +1,15 @@
 #!/bin/bash
 echo "Preparing your static portfolio site for export..."
 
-# Ensure we have a static build
-if [ ! -d "dist/public" ]; then
-  echo "Static build not found. Building first..."
-  ./build-static.sh
-fi
+# Clean any existing export directory
+echo "Cleaning previous export artifacts..."
+rm -rf portfolio-export
 
-# Create an export directory
+# Ensure we have a fresh static build
+echo "Rebuilding static assets to ensure latest changes..."
+./build-static.sh
+
+# Create a new export directory
 echo "Creating export directory..."
 mkdir -p portfolio-export
 cp -r dist/public/* portfolio-export/
