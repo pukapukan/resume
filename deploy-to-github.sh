@@ -5,10 +5,10 @@ set -e
 echo "Starting the build and deploy process for GitHub Pages..."
 
 # 1. Build and export the static site
-echo "Step 1: Building and exporting static site..."
+echo "Step 1: Building and exporting static site to docs folder..."
 ./export-static.sh
 
-# 2. Stage all changes including the portfolio-export directory
+# 2. Stage all changes including the docs directory
 echo "Step 2: Staging changes for commit..."
 git add .
 
@@ -34,4 +34,5 @@ fi
 git push origin $branch_name
 
 echo "Deployment complete! Your portfolio has been pushed to GitHub."
-echo "If you've configured GitHub Pages correctly, your site should be live shortly."
+echo "Your site will be available through GitHub Pages from the /docs folder."
+echo "Make sure you've selected the 'docs' folder in your repository's GitHub Pages settings."

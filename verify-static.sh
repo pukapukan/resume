@@ -43,7 +43,7 @@ fi
 if [ $MISSING_FILES -eq 0 ]; then
   echo "✅ All critical files are present!"
   echo "Your static build appears to be complete and ready for deployment."
-  echo "Use ./export-static.sh to prepare the files for upload."
+  echo "Use ./export-static.sh to prepare the files for the docs folder for GitHub Pages."
 else
   echo "❌ Some critical files are missing. The build may not be complete."
   echo "Try running ./build-static.sh again to regenerate the build."
