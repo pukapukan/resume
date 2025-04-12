@@ -52,9 +52,7 @@ const projects: Project[] = [
     artworkType: "community-platform",
     company: "Personal Project",
     stack: ["Node.js", "React", "GraphQL", "Redis", "AWS"],
-    links: {
-      live: "https://example.com"
-    }
+    links: {}
   }
 ];
 

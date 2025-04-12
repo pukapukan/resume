@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M30 60C30 46.7452 40.7452 36 54 36H66C79.2548 36 90 46.7452 90 60V60C90 73.2548 79.2548 84 66 84H54C40.7452 84 30 73.2548 30 60V60Z" fill="#64FFDA" fill-opacity="0.1" stroke="#64FFDA" stroke-width="2"/>
+  <path d="M40 48C40 48 50 45 60 55C70 65 80 62 80 62" stroke="#64FFDA" stroke-width="2" stroke-linecap="round"/>
+  <path d="M40 72C40 72 50 75 60 65C70 55 80 58 80 58" stroke="#64FFDA" stroke-width="2" stroke-linecap="round"/>
+</svg>
