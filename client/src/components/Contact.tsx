@@ -24,7 +24,7 @@ const Contact = () => {
       className="relative py-24 px-6 min-h-[80vh] flex items-center scroll-mt-24"
     >
       <div className="max-w-3xl mx-auto w-full">
-        <SectionHeading title="Get In Touch" number="04" align="center" />
+        <SectionHeading title="Get In Touch" number="04" />
 
         <div className={`mt-12 text-center ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
           <p className="text-text text-lg mb-8">
