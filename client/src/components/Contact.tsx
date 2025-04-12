@@ -28,8 +28,8 @@ const Contact = () => {
 
         <div className={`mt-12 text-center ${inView ? 'animate-fadeIn' : 'opacity-0'}`}>
           <p className="text-text text-lg mb-8">
-            I'm currently open to new opportunities and would love to hear from you.
-            Feel free to reach out via email or connect with me on LinkedIn.
+            Thanks for taking the time to review my portfolio. If you'd like to connect 
+            or discuss anything you've seen here, please feel free to reach out.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-6 mb-8">
@@ -59,7 +59,7 @@ const Contact = () => {
           </div>
           
           <p className="text-muted-foreground text-sm mt-12">
-            Thanks for visiting my portfolio. I look forward to connecting with you!
+            Whether it's a professional inquiry or just to say hello, I'll do my best to respond promptly.
           </p>
         </div>
       </div>
