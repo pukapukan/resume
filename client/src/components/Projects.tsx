@@ -223,14 +223,7 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Gates Notes-style call to action */}
-        <CallToAction 
-          title="Interested in more of my work?"
-          description="Feel free to reach out to learn more about my experience and qualifications."
-          primaryButtonText="Get In Touch"
-          primaryButtonLink="#contact"
-          variant="highlight"
-        />
+        {/* Removed the call to action as requested */}
       </div>
     </section>
   );
