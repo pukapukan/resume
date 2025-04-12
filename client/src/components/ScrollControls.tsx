@@ -22,6 +22,19 @@ export const ScrollControls = ({ children }: ScrollControlsProps) => {
     document.documentElement.style.overflow = 'auto';
     document.body.style.height = 'auto';
     
+    // Create a custom event for mobile browser overscroll protection
+    // This helps other components handle negative scroll values
+    const handleScroll = () => {
+      // Create a custom event with normalized scroll position
+      // This ensures scroll position is never negative
+      const scrollEvent = new CustomEvent('safeScroll', {
+        detail: {
+          scrollY: Math.max(0, window.scrollY)
+        }
+      });
+      document.dispatchEvent(scrollEvent);
+    };
+    
     // Handle special scrolling cases like hash navigation
     const handleHashChange = () => {
       const hash = window.location.hash;
@@ -37,12 +50,17 @@ export const ScrollControls = ({ children }: ScrollControlsProps) => {
       }
     };
     
-    // Add event listener for hash changes
+    // Add event listeners
     window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial call to set up correct scroll values
+    handleScroll();
     
     // Clean up
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
   

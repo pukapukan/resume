@@ -33,9 +33,10 @@ const FloatingDots: React.FC = () => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
     
-    // Track scroll position
+    // Track scroll position with safeguards for mobile overscroll
     const handleScroll = () => {
-      scrollYRef.current = window.scrollY;
+      // Ensure scrollY is never negative, which can happen with overscroll on mobile
+      scrollYRef.current = Math.max(0, window.scrollY);
     };
     
     // Initialize dots
@@ -131,7 +132,9 @@ class Dot {
     this.y += this.vy;
     
     // Adjust for scroll - gives parallax effect
-    this.y = this.origY - scrollY * 0.1;
+    // Ensure scrollY is never negative again as a safety measure
+    const safeScrollY = Math.max(0, scrollY);
+    this.y = this.origY - safeScrollY * 0.1;
     
     // React slightly to mouse - only if mouse is close
     const mouseDistance = Math.sqrt(
