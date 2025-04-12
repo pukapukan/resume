@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M60 15L90 30V60L60 75L30 60V30L60 15Z" stroke="#64FFDA" stroke-width="4" fill="none"/>
+  <path d="M60 30L75 37.5V52.5L60 60L45 52.5V37.5L60 30Z" stroke="#64FFDA" stroke-width="2" fill="none"/>
+  <line x1="30" y1="30" x2="45" y2="37.5" stroke="#64FFDA" stroke-width="2"/>
+  <line x1="90" y1="30" x2="75" y2="37.5" stroke="#64FFDA" stroke-width="2"/>
+  <line x1="30" y1="60" x2="45" y2="52.5" stroke="#64FFDA" stroke-width="2"/>
+  <line x1="90" y1="60" x2="75" y2="52.5" stroke="#64FFDA" stroke-width="2"/>
+</svg>
