@@ -89,31 +89,11 @@ export default {
             transform: "translateY(0)",
           },
         },
-        "gradient-x": {
-          "0%, 100%": {
-            "background-position": "0% 50%",
-            "opacity": "0.5",
-          },
-          "50%": {
-            "background-position": "100% 50%",
-            "opacity": "0.8",
-          },
-        },
-        "pulse-soft": {
-          "0%, 100%": {
-            opacity: "0.5",
-          },
-          "50%": {
-            opacity: "1",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fadeIn": "fade-in 0.8s ease-out forwards",
-        "gradient-x": "gradient-x 4s ease infinite",
-        "pulse": "pulse-soft 2s ease-in-out infinite",
       },
     },
   },
