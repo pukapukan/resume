@@ -33,16 +33,28 @@ const StripeBackground: React.FC = () => {
     };
     
     // Track scroll position with enhanced safeguards for mobile overscroll
+    // Special handling for Safari's elastic scrolling behavior
     const handleScroll = () => {
       // Only update the target scroll position, not the actual one used for rendering
       // Enhanced safeguard for overscroll on mobile and initial load
       const newScrollY = Math.max(0, window.scrollY);
       
-      // Limit scroll change rate for initial viewport
-      // This prevents large jumps during initial load and bounce effects
+      // Safari-specific check - detect very rapid scroll changes that indicate elastic scrolling
+      const scrollChange = Math.abs(targetScrollYRef.current - newScrollY);
+      const isSafariElasticScroll = scrollChange > 30 && newScrollY < 100;
+      
+      // Special case for Safari's elastic overscroll in the top viewport area
+      if (isSafariElasticScroll) {
+        // Use extremely gradual changes during elastic scrolling in Safari
+        targetScrollYRef.current += (newScrollY - targetScrollYRef.current) * 0.05;
+        return; // Exit early to prevent jumps
+      }
+      
+      // Regular scroll handling with stabilization logic
       if (!isAnimationStable) {
-        if (Math.abs(targetScrollYRef.current - newScrollY) > 50) {
-          targetScrollYRef.current += (newScrollY - targetScrollYRef.current) * 0.1;
+        if (scrollChange > 20) {
+          // Even more damped response during initial load
+          targetScrollYRef.current += (newScrollY - targetScrollYRef.current) * 0.08;
         } else {
           targetScrollYRef.current = newScrollY;
         }
