@@ -8,6 +8,8 @@ import { useThemeStore } from '../lib/stores/useThemeStore';
 const StripeBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useThemeStore(state => state.theme);
+  const scrollYRef = useRef(0);
+  const targetScrollYRef = useRef(0);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,6 +28,12 @@ const StripeBackground: React.FC = () => {
       
       // Regenerate blobs on resize for better coverage
       initBlobs();
+    };
+    
+    // Track scroll position with safeguards for mobile overscroll
+    const handleScroll = () => {
+      // Only update the target value, not the actual one used for rendering
+      targetScrollYRef.current = Math.max(0, window.scrollY);
     };
     
     // Create initial blobs
@@ -53,13 +61,25 @@ const StripeBackground: React.FC = () => {
       }
     };
     
+    // Helper function for smooth interpolation
+    const lerp = (start: number, end: number, t: number) => {
+      return start * (1 - t) + end * t;
+    };
+    
     // Animation loop
     const animate = (timestamp: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Smooth scroll transition using lerp
+      scrollYRef.current = lerp(
+        scrollYRef.current, 
+        targetScrollYRef.current, 
+        0.05 // Match the smoothness in FloatingDots
+      );
+      
       // Update and draw each blob
       blobs.forEach(blob => {
-        blob.update(timestamp, canvas.width, canvas.height);
+        blob.update(timestamp, canvas.width, canvas.height, scrollYRef.current);
         blob.draw(ctx);
       });
       
@@ -68,12 +88,14 @@ const StripeBackground: React.FC = () => {
     
     // Initialize
     window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll);
     handleResize();
     animationFrameId = requestAnimationFrame(animate);
     
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(animationFrameId);
     };
   }, [theme]);
@@ -91,6 +113,8 @@ const StripeBackground: React.FC = () => {
 class Blob {
   x: number;
   y: number;
+  origY: number;
+  targetY: number;
   size: number;
   color: string;
   vx: number;
@@ -100,7 +124,8 @@ class Blob {
   
   constructor(x: number, y: number, size: number, color: string, vx: number, vy: number) {
     this.x = x;
-    this.y = y;
+    this.y = this.origY = y;
+    this.targetY = y;
     this.size = size;
     this.color = color;
     this.vx = vx;
@@ -109,7 +134,7 @@ class Blob {
     this.lastUpdate = 0;
   }
   
-  update(timestamp: number, canvasWidth: number, canvasHeight: number) {
+  update(timestamp: number, canvasWidth: number, canvasHeight: number, scrollY: number) {
     // Constants for velocity management
     const maxVelocity = 0.0002; // Increased max velocity for more visible movement
     const minVelocity = 0.00005; // Increased min velocity for more visible movement
@@ -121,12 +146,17 @@ class Blob {
     
     // Update position with normalized time
     this.x += this.vx * deltaTime;
-    this.y += this.vy * deltaTime;
+    
+    // Set target position based on scroll - subtle parallax effect
+    // Use a much smaller multiplier to make the effect very subtle
+    this.targetY = this.origY - scrollY * 0.03;
+    
+    // Smooth transition to target Y
+    this.y = this.y + (this.targetY - this.y) * 0.05;
     
     // Rotate at a moderate pace
     if (timestamp - this.lastUpdate > 100) { // Less frequent updates
       this.angle += 0.001; // Increased rotation speed for more visible movement
-      // Only update lastUpdate for rotation, not for position calculation
     }
     
     // Bounce off edges with a little randomness
@@ -136,7 +166,8 @@ class Blob {
       this.vx += (Math.random() * 0.00002 - 0.00001);
     }
     
-    if (this.y < -this.size/2 || this.y > canvasHeight + this.size/2) {
+    // Bounce off top and bottom using the target Y
+    if (this.targetY < -this.size/2 || this.targetY > canvasHeight + this.size/2) {
       this.vy *= -1;
       // Add smaller randomness and oscillate velocity
       this.vy += (Math.random() * 0.00002 - 0.00001);
