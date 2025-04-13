@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M35 40L60 30L85 40L60 50L35 40Z" fill="#64FFDA" fill-opacity="0.2" stroke="#64FFDA" stroke-width="2"/>
+  <path d="M35 50L60 40L85 50L60 60L35 50Z" fill="#64FFDA" fill-opacity="0.2" stroke="#64FFDA" stroke-width="2"/>
+  <path d="M35 60L60 50L85 60L60 70L35 60Z" fill="#64FFDA" fill-opacity="0.2" stroke="#64FFDA" stroke-width="2"/>
+  <path d="M35 70L60 60L85 70L60 80L35 70Z" fill="#64FFDA" fill-opacity="0.2" stroke="#64FFDA" stroke-width="2"/>
+</svg>
