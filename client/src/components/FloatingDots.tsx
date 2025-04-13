@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useThemeStore } from '../lib/stores/useThemeStore';
 
 /**
@@ -11,9 +11,10 @@ const FloatingDots: React.FC = () => {
   const dotsRef = useRef<Dot[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const scrollYRef = useRef(0);
-  // Add a separate target scroll value for smooth transitions
   const targetScrollYRef = useRef(0);
   const lastTimeRef = useRef(0);
+  const isInitializedRef = useRef(false);
+  const [isAnimationStable, setIsAnimationStable] = useState(false);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -36,11 +37,23 @@ const FloatingDots: React.FC = () => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
     
-    // Track scroll position with safeguards for mobile overscroll
+    // Track scroll position with enhanced safeguards for mobile overscroll
     const handleScroll = () => {
       // Only update the target scroll position, not the actual one used for rendering
-      // Ensure scrollY is never negative, which can happen with overscroll on mobile
-      targetScrollYRef.current = Math.max(0, window.scrollY);
+      // Enhanced safeguard for overscroll on mobile and initial load
+      const newScrollY = Math.max(0, window.scrollY);
+      
+      // Limit scroll change rate for initial viewport
+      // This prevents large jumps during initial load and bounce effects
+      if (!isAnimationStable) {
+        if (Math.abs(targetScrollYRef.current - newScrollY) > 50) {
+          targetScrollYRef.current += (newScrollY - targetScrollYRef.current) * 0.1;
+        } else {
+          targetScrollYRef.current = newScrollY;
+        }
+      } else {
+        targetScrollYRef.current = newScrollY;
+      }
     };
     
     // Initialize dots
@@ -58,6 +71,19 @@ const FloatingDots: React.FC = () => {
             `rgba(${10 + Math.random() * 40}, ${50 + Math.random() * 100}, ${100 + Math.random() * 175}, ${0.15 + Math.random() * 0.45})`
         ));
       }
+      
+      // Initial synchronization of scroll values to avoid jumps
+      scrollYRef.current = Math.max(0, window.scrollY);
+      targetScrollYRef.current = scrollYRef.current;
+      
+      // Update all dots to match the initial scroll position
+      // This prevents the dots from animating to their positions on load
+      dotsRef.current.forEach(dot => {
+        const scrollFactor = 0.04; // Must match the factor in the update method
+        const scrollOffset = scrollYRef.current * scrollFactor;
+        dot.y = dot.origY - scrollOffset;
+        dot.targetY = dot.y;
+      });
     };
     
     // Animation loop with timestamp for consistent animation
@@ -69,17 +95,32 @@ const FloatingDots: React.FC = () => {
       lastTimeRef.current = timestamp;
       
       // Smooth scroll transition using lerp (linear interpolation)
+      // Use a more aggressive smoothing for the first seconds after load
+      const smoothingFactor = isAnimationStable ? 0.06 : 0.12;
+      
       scrollYRef.current = lerp(
         scrollYRef.current, 
         targetScrollYRef.current, 
-        Math.min(1, deltaTime * 0.003) // Adjust this value to control smoothness
+        Math.min(1, deltaTime * smoothingFactor)
       );
       
-      // Update and draw dots with timestamp
-      dotsRef.current.forEach(dot => {
-        dot.update(mouseRef.current, scrollYRef.current, canvas.width, canvas.height, timestamp, deltaTime);
-        dot.draw(ctx);
-      });
+      // Only start interpolating once we have a stable reference
+      if (isInitializedRef.current) {
+        // Update and draw dots with timestamp
+        dotsRef.current.forEach(dot => {
+          dot.update(mouseRef.current, scrollYRef.current, canvas.width, canvas.height, timestamp, deltaTime, isAnimationStable);
+          dot.draw(ctx);
+        });
+      } else {
+        // For the very first few frames, just draw without updating
+        // This prevents the initial jump when the component loads
+        dotsRef.current.forEach(dot => {
+          dot.draw(ctx);
+        });
+        
+        // Mark as initialized after first frame
+        isInitializedRef.current = true;
+      }
       
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -88,8 +129,20 @@ const FloatingDots: React.FC = () => {
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll);
+    
+    // Run initial setup
     handleResize();
+    
+    // Set initial scroll position from current page state
+    handleScroll();
+    
+    // Start animation
     animate(performance.now());
+    
+    // Add a delay to match the page animations and allow everything to stabilize
+    const stabilizeTimer = setTimeout(() => {
+      setIsAnimationStable(true);
+    }, 1000); // Longer delay to ensure page has fully loaded
     
     // Cleanup
     return () => {
@@ -97,6 +150,7 @@ const FloatingDots: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(animationFrameId);
+      clearTimeout(stabilizeTimer);
     };
   }, [theme]);
   
@@ -134,7 +188,7 @@ class Dot {
   vy: number;
   origX: number;
   origY: number;
-  targetY: number; // Add a target Y position for smooth transitions
+  targetY: number;
   lastUpdate: number;
   
   constructor(x: number, y: number, size: number, color: string) {
@@ -146,40 +200,45 @@ class Dot {
     this.lastUpdate = 0;
     
     // Random velocity (extremely slow)
-    this.vx = Math.random() * 0.05 - 0.025; // 4x slower
-    this.vy = Math.random() * 0.05 - 0.025; // 4x slower
+    this.vx = Math.random() * 0.03 - 0.015; // Even slower for initial load
+    this.vy = Math.random() * 0.03 - 0.015; // Even slower for initial load
   }
   
-  update(mouse: { x: number, y: number }, scrollY: number, width: number, height: number, timestamp: number, deltaTime: number) {
+  update(mouse: { x: number, y: number }, scrollY: number, width: number, height: number, timestamp: number, deltaTime: number, isStable: boolean) {
     // Calculate a normalized time delta to make movement frame-rate independent
     const baseTime = 16; // Base time step (roughly 60fps)
     const normalizedDelta = Math.min(deltaTime, 32) || baseTime;
     
     // Apply tiny base movement with time delta normalization
-    this.x += this.vx * normalizedDelta;
+    // Reduce horizontal movement at the top of the page
+    const speedReductionFactor = isStable ? 1.0 : 0.5;
+    this.x += this.vx * normalizedDelta * speedReductionFactor;
     
     // Set target position based on scroll - reduces the scroll effect by 60%
-    // This dramatically reduces the visible jumping effect
     this.targetY = this.origY - scrollY * 0.04; // Reduced from 0.1
     
     // Smoothly interpolate to the target Y position
-    this.y = this.y + (this.targetY - this.y) * 0.05; // Adjust 0.05 to control smoothness
+    // More aggressive smoothing during initial load
+    const smoothingFactor = isStable ? 0.05 : 0.02;
+    this.y = this.y + (this.targetY - this.y) * smoothingFactor;
     
-    // React slightly to mouse - only if mouse is close
-    const mouseDistance = Math.sqrt(
-      Math.pow(mouse.x - this.x, 2) + 
-      Math.pow(mouse.y - this.y, 2)
-    );
-    
-    const mouseInfluenceRadius = 200;
-    
-    if (mouseDistance < mouseInfluenceRadius) {
-      const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
-      const force = (mouseInfluenceRadius - mouseDistance) / mouseInfluenceRadius;
+    // React slightly to mouse - only if mouse is close and animation is stable
+    if (isStable) {
+      const mouseDistance = Math.sqrt(
+        Math.pow(mouse.x - this.x, 2) + 
+        Math.pow(mouse.y - this.y, 2)
+      );
       
-      // Move away from mouse (even more subtle effect)
-      this.x -= Math.cos(angle) * force * 0.2 * (normalizedDelta / baseTime); // Time-normalized
-      this.y -= Math.sin(angle) * force * 0.2 * (normalizedDelta / baseTime); // Time-normalized
+      const mouseInfluenceRadius = 200;
+      
+      if (mouseDistance < mouseInfluenceRadius) {
+        const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
+        const force = (mouseInfluenceRadius - mouseDistance) / mouseInfluenceRadius;
+        
+        // Move away from mouse (subtle effect)
+        this.x -= Math.cos(angle) * force * 0.2 * (normalizedDelta / baseTime);
+        this.y -= Math.sin(angle) * force * 0.2 * (normalizedDelta / baseTime);
+      }
     }
     
     // Wrap around edges with a buffer
